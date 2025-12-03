@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Abhiram – Video Editing Portfolio</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg: radial-gradient(circle at top left, #f5ede4, #efe6d8, #e7ddcb); /* subtle nude blend */
+      --accent: #a8b095; /* soft olive */
+      --text: #2d2a26;
+    }
+
+    *{
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body{
+      font-family: Inter, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      padding: 40px 5vw 80px;
+    }
+
+    h1, h2{
+      font-family: Cinzel, serif;
+      letter-spacing: 2px;
+    }
+
+    .top-info{
+      text-align: center;
+      margin-bottom: 60px;
+    }
+
+    .top-info h1{
+      font-size: 2.6rem;
+      margin-bottom: 10px;
+    }
+
+    .top-info p{
+      font-size: 0.95rem;
+      opacity: 0.8;
+      margin: 4px 0;
+    }
+
+    .section{
+      margin-bottom: 80px;
+    }
+
+    .section h2{
+      margin-bottom: 25px;
+      font-size: 1.4rem;
+    }
+
+    .video-wrapper{
+      width: 100%;
+      display: flex;
+      justify-content: center;
+    }
+
+    .video-wrapper video{
+      width: 100%;
+      max-height: 520px;
+      object-fit: cover;
+      border-radius: 28px;
+      overflow: hidden;
+      transition: all 0.4s ease;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.06);
+    }
+
+    .grid-2{
+      display: grid;
+      grid-template-columns: repeat(2, minmax(260px, 1fr));
+      gap: 40px;
+      align-items: center;
+    
+    .grid-2 video{
+      width: 100%;
+      aspect-ratio: 9 / 16;
+      object-fit: cover;
+    }
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .grid-3{
+      display: grid;
+      grid-template-columns: repeat(3, minmax(240px, 1fr));
+      gap: 35px;
+      align-items: center;
+    }
+
+    .grid-3 video{
+      width: 100%;
+      aspect-ratio: 9 / 16;
+      object-fit: cover;
+    }
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 30px;
+    }
+      gap: 30px;
+    }
+
+    .portrait video{
+      height: 520px;
+    }
+
+    video:hover{
+      transform: scale(1.01);
+      box-shadow: 0 25px 70px rgba(0,0,0,0.08);
+    }
+
+    /* Responsive */
+    @media (max-width: 900px){
+      .grid-2,
+      .grid-3{
+        grid-template-columns: 1fr;
+      }
+      .grid-2{
+        grid-template-columns: 1fr;
+      }
+
+      .portrait video{
+        height: 420px;
+      }
+
+      .section{
+        margin-bottom: 60px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Info -->
+  <div class="top-info" style="display:flex;justify-content:space-between;align-items:center;text-align:left;">
+  <h1 style="margin-bottom:0;">Abhiram</h1>
+  <div style="text-align:right;">
+    <h1>Abhiram</h1>
+    <p>jammuabhiram@gmail.com</p>
+    <p>9959715732</p>
+    </div>
+</div>
+
+<!-- Section 1: Hero Video -->
+  <div class="section">
+    <h2>Lyrical Video</h2>
+    <div class="video-wrapper">
+      <video src="hero-video.mp4" muted loop playsinline></video>
+    </div>
+  </div>
+
+  <!-- Section 2: Reels & Shorts -->
+  <div class="section">
+    <h2>Reels and Shorts</h2>
+    <div class="grid-2 portrait">
+      <video src="reel-1.mp4" muted loop playsinline></video>
+      <video src="reel-2.mp4" muted loop playsinline></video>
+    </div>
+  </div>
+
+  <!-- Section 3: Faceless & Lifestyle -->
+    <div class="section">
+    <h2>Faceless and Lifestyle</h2>
+    <div class="grid-3 portrait">
+      <video src="faceless-1.mp4" muted loop playsinline></video>
+      <video src="faceless-2.mp4" muted loop playsinline></video>
+      <video src="faceless-3.mp4" muted loop playsinline></video>
+    </div>
+  </div>
+  </div>
+
+  <script>
+    const videos = document.querySelectorAll('video');
+
+    videos.forEach(video => {
+      video.addEventListener('mouseenter', () => {
+        video.currentTime = 0;
+        video.play();
+      });
+
+      video.addEventListener('mouseleave', () => {
+        video.pause();
+        video.currentTime = 0;
+      });
+    });
+  </script>
+
+</body>
+</html>
