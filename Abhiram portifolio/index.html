@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Abhiram | Video Editing Portfolio</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&family=Playfair+Display:wght@500;600&display=swap" rel-stylesheet">
+
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
+
+    body{
+      background: linear-gradient(180deg,#f8e9f0 0%, #f9f3ef 60%);
+      color:#1e1c1a;
+      overflow-x:hidden;
+    }
+
+    /* HEADER CONTAINER */
+    .contact-panel-container {
+      width: 94%; 
+      margin: 30px auto; 
+    }
+
+    /* CONTACT PANEL STYLES */
+    .contact-panel{
+      display: flex;
+      flex-direction: column; 
+      align-items: flex-start; 
+      gap: 15px; 
+      padding: 30px 40px; 
+      background: #f8e9f0; 
+      border-radius: 999px; 
+      box-shadow: 0 5px 15px rgba(0,0,0,0.05); 
+      transition: 0.4s ease;
+      position: relative;
+      z-index: 20;
+    }
+
+    .contact-panel:hover{
+      transform: translateY(-4px) scale(1.005);
+      box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+      background: #f7e0ed; 
+    }
+    
+    .top-row-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end; 
+        width: 100%;
+    }
+
+    .header-left { display: block; }
+    
+    .header-left h1{
+      font-family:'Playfair Display',serif;
+      font-size:44px;
+      letter-spacing:2px;
+      margin-bottom: 2px;
+    }
+    
+    .header-left .skills-apps {
+        font-family: 'Poppins', sans-serif;
+        font-size: 14px;
+        font-weight: 500;
+        color: #5d5d5d;
+        display: block;
+    }
+    
+    .bottom-description {
+        width: 100%;
+        text-align: left; 
+        padding: 0 10px; 
+    }
+
+    .bottom-description p {
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        font-size: 14px;
+        line-height: 1.5;
+        color: #3e3a34;
+        margin: 0;
+        max-width: 700px;
+        font-weight: 500;
+    }
+
+    .header-right{
+      text-align:right;
+      display:flex;
+      flex-direction:column;
+      gap:6px;
+      font-size:14px;
+    }
+
+    .header-right a{
+      text-decoration:none;
+      color:#3e3a34;
+    }
+
+    /* PANELS */
+    .panel{
+      width: 94%; 
+      margin: 40px auto; 
+      padding:60px;
+      border-radius:36px;
+      transition:0.4s ease;
+      background:white;
+      position:relative; 
+      z-index:10;
+    }
+    
+    .panel .panel-logo {
+        position: absolute;
+        top: 60px; 
+        right: 60px;
+        width: 90px; 
+        height: auto;
+        opacity: 0.8;
+    }
+
+    .panel:nth-of-type(1) { margin-top: 50px; }
+
+    .panel:hover{
+      transform:translateY(-6px) scale(1.01);
+      box-shadow:0 25px 50px rgba(0,0,0,0.12);
+    }
+
+    .panel-1{background:#fbeff6;} 
+    .panel-2{background:#fffafa;} 
+    .panel-3{background:#f5f5f0;} 
+
+    .panel h2{
+      font-family:'Playfair Display',serif;
+      font-size:32px;
+      margin-bottom:10px;
+    }
+
+    .panel p, .video-description{
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      color:#4b433b;
+      line-height:1.6;
+    }
+
+    .panel p{
+      margin-bottom:40px;
+      max-width:580px;
+    }
+
+    /* VIDEO BOXES */
+    .video-box-wrapper{ 
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      align-items: center; 
+    }
+
+    .video-box{
+      border-radius:26px;
+      overflow:hidden;
+      position:relative;
+      background: rgba(0, 0, 0, 0.05); 
+      transition:0.35s ease;
+      cursor: pointer; /* Added pointer to indicate clickable */
+    }
+
+    .video-box.portrait {
+        max-width: 280px; 
+        margin: 0 auto;
+    }
+
+    .video-box:hover{
+      transform:scale(1.03);
+      box-shadow:0 18px 40px rgba(0,0,0,0.22);
+    }
+
+    .video-box.no-pop:hover{
+      transform:none;
+      box-shadow:none;
+    }
+
+    video{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      border-radius:26px; 
+    }
+
+    .video-description{
+      font-size: 14px;
+      padding: 5px 0 10px;
+      color: #6a6a6a;
+      min-height: 70px; 
+      max-width: 280px; 
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    /* GRID */
+    .grid-1{display:grid;grid-template-columns:1fr;}
+    .grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:40px;}
+    .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:35px;}
+
+    .portrait{aspect-ratio:9/16;}
+    .landscape{aspect-ratio:16/9;}
+
+    /* SOUND BUTTON */
+    .sound-btn{
+      position:absolute;
+      bottom:16px;
+      right:16px;
+      width:46px;
+      height:46px;
+      border-radius:50%;
+      border:none;
+      background:rgba(255,255,255,0.88);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      cursor:pointer;
+      font-size:18px;
+      opacity:0;
+      transition:0.3s ease;
+    }
+
+    .video-box:hover .sound-btn{
+      opacity:1;
+    }
+    
+    @media(max-width:900px){
+      .grid-2,.grid-3{grid-template-columns:1fr;}
+      .contact-panel {
+        gap: 15px;
+        padding: 25px 30px;
+        border-radius: 40px; 
+      }
+      .top-row-content {
+          flex-direction: column;
+          align-items: center;
+          gap: 10px;
+      }
+      .header-right{text-align:center}
+      .header-left {text-align:center; align-items:center;}
+      .bottom-description { text-align: center; padding: 0;}
+      .panel{padding:30px;width:92%;}
+      .panel:nth-of-type(1) { margin-top: 40px; } 
+
+      .video-box.portrait { max-width: none; }
+      .video-description { max-width: none; }
+      .panel h2 { justify-content: center; gap: 10px; }
+      .panel .panel-logo { top: 30px; right: 30px; width: 50px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="contact-panel-container">
+    <header class="contact-panel">
+        <div class="top-row-content">
+            <div class="header-left">
+                <h1>Abhiram</h1>
+                <span class="skills-apps">Premiere Pro | After Effects</span>
+            </div>
+
+            <div class="header-right">
+                <a href="mailto:jammuabhiram@gmail.com">jammuabhiram@gmail.com</a>
+                <span>Video Editor • Visual Storyteller</span>
+            </div>
+        </div>
+      
+        <div class="bottom-description">
+            <p>
+                I am experienced in video editing and have a strong foundation in visual storytelling. <br>I am proficient and skilled at utilizing Adobe Premiere Pro and After Effects for creating high-impact content.
+            </p>
+        </div>
+    </header>
+</div>
+
+
+<section class="panel panel-1">
+  <h2>Lyrical Video</h2>
+  <img src="logo1.png" alt="Lyrical Video Logo" class="panel-logo">
+  <p>
+    Emotion-driven lyrical storytelling, crafted with smooth cinematic transitions, rhythm-based cuts and visual flow that enhances the feel of the music.
+  </p>
+
+  <div class="grid-1">
+    <div class="video-box landscape no-pop">
+      <video muted playsinline preload="metadata">
+        <source src="video1.mp4" type="video/mp4">
+      </video>
+      <button class="sound-btn">🔇</button>
+    </div>
+  </div>
+</section>
+
+
+<section class="panel panel-2">
+  <h2>Reels and Shorts</h2>
+  <img src="logo2.png" alt="Reels and Shorts Logo" class="panel-logo">
+  <p>
+    High-impact vertical content designed for social media growth, engagement and modern viewing habits.
+  </p>
+
+  <div class="grid-2">
+    <div class="video-box portrait">
+      <video muted playsinline preload="metadata">
+        <source src="video2.mp4" type="video/mp4">
+      </video>
+      <button class="sound-btn">🔇</button>
+    </div>
+
+    <div class="video-box portrait">
+      <video muted playsinline preload="metadata">
+        <source src="video3.mp4" type="video/mp4">
+      </video>
+      <button class="sound-btn">🔇</button>
+    </div>
+  </div>
+</section>
+
+
+<section class="panel panel-3">
+  <h2>Faceless and Lifestyle</h2>
+  <img src="logo3.png" alt="Faceless and Lifestyle Logo" class="panel-logo">
+  <p>
+    Minimal, aesthetic and story-focused visuals crafted for brands, concepts and lifestyle storytelling without showing faces.
+  </p>
+
+  <div class="grid-3">
+    <div class="video-box-wrapper">
+      <div class="video-box portrait">
+        <video class="auto-play-video" muted playsinline preload="metadata">
+          <source src="video4.mp4" type="video/mp4">
+        </video>
+        <button class="sound-btn">🔇</button>
+      </div>
+      <div class="video-description">
+        **Faceless Narratives**
+        <br>Abstract visuals and crisp motion graphics used to convey complex ideas and brand identity without relying on human presence.
+      </div>
+    </div>
+
+    <div class="video-box-wrapper">
+      <div class="video-box portrait">
+        <video class="auto-play-video" muted playsinline preload="metadata">
+          <source src="video5.mp4" type="video/mp4">
+        </video>
+        <button class="sound-btn">🔇</button>
+      </div>
+      <div class="video-description">
+        **Aesthetic Mood Pieces**
+        <br>Clean cuts and soft color grading emphasize tranquility and modern living, perfect for wellness and luxury brands.
+      </div>
+    </div>
+
+    <div class="video-box-wrapper">
+      <div class="video-box portrait">
+        <video class="auto-play-video" muted playsinline preload="metadata">
+          <source src="video6.mp4" type="video/mp4">
+        </video>
+        <button class="sound-btn">🔇</button>
+      </div>
+      <div class="video-description">
+        **Cinematic Concepts**
+        <br>Rich texture, slow motion, and deliberate composition create deep visual impact and narrative tension, even in short form.
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<script>
+  // --- PANEL 3 AUTO-PLAY OBSERVER ---
+  const autoPlayObserver = new IntersectionObserver((entries, observer) => {
+    entries.forEach(entry => {
+      const video = entry.target;
+      // Only play if it enters view AND hasn't played yet
+      if (entry.isIntersecting && !video.dataset.played) {
+        video.muted = true; // Ensure muted for auto-play
+        video.play();
+      }
+    });
+  }, { threshold: 0.5 }); // Trigger when 50% of video is visible
+
+  // Select only Panel 3 videos for auto-play
+  document.querySelectorAll('.panel-3 video').forEach(video => {
+    autoPlayObserver.observe(video);
+  });
+
+
+  // --- MAIN VIDEO LOGIC (ALL PANELS) ---
+  document.querySelectorAll('.video-box').forEach(box => {
+    const video = box.querySelector('video');
+    const button = box.querySelector('.sound-btn');
+    
+    // Check which panel this video belongs to
+    const isPanel3 = box.closest('.panel-3') !== null;
+    
+    // Initialize state
+    video.muted = true;
+    button.textContent = "🔇";
+    let soundOn = false; // User's preference for this specific video
+
+    // 1. Mouse Enter: Play and Unmute (if sound toggle is ON)
+    box.addEventListener('mouseenter', () => {
+      video.play();
+      if (soundOn) {
+        video.muted = false;
+      }
+    });
+    
+    // 2. Mouse Leave Logic
+    box.addEventListener('mouseleave', () => {
+       // Always MUTE immediately when leaving the video
+       video.muted = true;
+
+       if (isPanel3) {
+           // PANEL 3: Always keep playing until end (Standard behavior for Panel 3)
+           // Do nothing (video continues playing muted)
+       } else {
+           // PANELS 1 & 2:
+           if (soundOn) {
+               // If Sound was ON: Continue playing until end (Muted)
+               // Do nothing (video continues playing muted)
+           } else {
+               // If Sound was OFF: Pause immediately (Resume later)
+               video.pause();
+           }
+       }
+    });
+
+    // 3. Video Ended: Reset logic
+    video.addEventListener('ended', () => {
+      video.pause();
+      video.currentTime = 0; // Reset to start
+      
+      // Mark Panel 3 videos as "played" so they don't auto-play again
+      if (isPanel3) {
+        video.dataset.played = "true";
+      }
+    });
+
+    // 4. Click Anywhere on the Box (Video or Button) to Toggle Sound
+    box.addEventListener('click', () => {
+      // Toggle sound state preference
+      soundOn = !soundOn;
+      video.muted = !soundOn;
+      button.textContent = soundOn ? "🔊" : "🔇";
+      
+      if (soundOn) {
+        // Ensure it's playing if user clicks sound (useful if video was paused)
+        video.play();
+      }
+    });
+  });
+</script>
+
+</body>
+</html>
