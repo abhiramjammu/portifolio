@@ -19,362 +19,257 @@
       padding-bottom: 20px; 
     }
 
-    /* --- LIQUID GLASS ANIMATION KEYFRAMES --- */
-    /* This creates the sweeping light effect */
-    @keyframes sheen {
-      0% { left: -150%; }
-      100% { left: 150%; }
+    /* =========================================
+       1. AUTOMATIC SHINE ANIMATION
+       ========================================= */
+    @keyframes softSheen {
+        0% { transform: translateX(-150%) skewX(-25deg); }
+        50% { transform: translateX(250%) skewX(-25deg); }
+        100% { transform: translateX(250%) skewX(-25deg); } 
     }
 
-    /* HEADER CONTAINER */
-    .contact-panel-container {
-      width: 94%; 
-      margin: 30px auto; 
-    }
-
-    /* CONTACT PANEL STYLES */
-    .contact-panel{
-      display: flex;
-      flex-direction: column; 
-      align-items: flex-start; 
-      gap: 15px; 
-      padding: 30px 40px; 
-      
-      /* Base Glass Styles */
-      background: rgba(248, 233, 240, 0.6); /* Slightly transparent */
-      backdrop-filter: blur(12px); /* Frosted glass effect */
-      border: 1px solid rgba(255, 255, 255, 0.6); /* White glass edge */
-      
-      border-radius: 999px; 
-      box-shadow: 0 5px 15px rgba(0,0,0,0.05); 
-      transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); /* Smoother "liquid" easing */
+    /* =========================================
+       2. GLASS PANEL ENGINE
+       ========================================= */
+    .glass-panel {
       position: relative;
-      z-index: 20;
-      overflow: hidden; /* Keeps the light shine inside the box */
+      z-index: 10;
+      /* Overflow visible allows videos to pop out of the panel bounds */
+      overflow: visible; 
+      border-radius: 40px; 
+      transition: transform 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
     }
 
-    /* Liquid Sheen for Contact Panel */
-    .contact-panel::after {
-      content: '';
+    /* The Glass Background Layer (Clips the shine but not the content) */
+    .glass-bg-layer {
       position: absolute;
-      top: 0;
-      left: -150%;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);
-      transform: skewX(-25deg);
-      transition: 0s;
-      pointer-events: none;
+      top: 0; left: 0; right: 0; bottom: 0;
+      border-radius: 40px;
+      overflow: hidden; 
+      border: 1px solid transparent; 
+      box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+      backdrop-filter: blur(12px); 
+      z-index: -1; 
+      transition: all 0.5s ease;
     }
 
-    .contact-panel:hover{
-      transform: translateY(-4px) scale(1.005);
-      box-shadow: 0 15px 30px rgba(0,0,0,0.15);
-      background: rgba(244, 228, 238, 0.8);
-    }
-    
-    .contact-panel:hover::after {
-      animation: sheen 0.7s forwards; /* Triggers the light sweep */
-    }
-    
-    .top-row-content {
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-start;
-        width: 100%;
-        position: relative;
-        z-index: 2; /* Ensures text stays above the sheen */
-    }
-
-    .header-left { 
-        display: flex;
-        flex-direction: column;
-        gap: 10px; 
-        padding-left: 20px; 
-        max-width: 65%; 
-    }
-    
-    .header-left h1{
-      font-family:'Playfair Display',serif;
-      font-size:44px;
-      letter-spacing:2px;
-      margin-bottom: 0px; 
-      line-height: 1;
-    }
-    
-    .header-left .skills-apps {
-        font-family: 'Poppins', sans-serif;
-        font-size: 14px;
-        font-weight: 500;
-        color: #5d5d5d;
-        display: block;
-        margin-bottom: 5px;
-    }
-    
-    .header-description {
-        font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-        font-size: 14px;
-        line-height: 1.5;
-        color: #3e3a34;
-        font-weight: 500;
-    }
-
-    .header-right{
-      text-align:right;
-      display:flex;
-      flex-direction:column;
-      gap: 0; 
-      font-size:14px;
-      padding-top: 10px; 
-    }
-
-    .header-right a{
-      text-decoration:none;
-      color:#3e3a34;
-      font-weight: 500;
-      margin-bottom: 2px; 
-      display: block;
-    }
-
-    .header-right span {
-        display: block;
-        color: #5d5d5d; 
-    }
-    
-
-    /* PANELS */
-    .panel{
-      width: 94%; 
-      margin: 40px auto; 
-      padding:60px;
-      border-radius:36px;
-      
-      /* LIQUID GLASS BASE STYLES */
-      position:relative; 
-      z-index:10;
-      overflow: hidden; /* Traps the sheen inside */
-      backdrop-filter: blur(10px); /* Glass blur */
-      border: 1px solid rgba(255, 255, 255, 0.5); /* Glass edge border */
-      box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-      
-      /* Smooth liquid transition */
-      transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1); 
-    }
-    
-    /* The Light Sheen Element */
-    .panel::before {
+    /* Automatic Shine */
+    .glass-bg-layer::before {
       content: "";
       position: absolute;
-      top: 0;
-      left: -150%;
-      width: 100%;
-      height: 100%;
-      /* The shine gradient */
+      top: 0; left: 0; width: 100%; height: 100%;
+      z-index: 1; pointer-events: none;
+      
       background: linear-gradient(
-        120deg, 
-        transparent 0%, 
-        rgba(255, 255, 255, 0.1) 30%, 
-        rgba(255, 255, 255, 0.6) 50%, 
-        rgba(255, 255, 255, 0.1) 70%, 
-        transparent 100%
+          90deg,
+          transparent 0%, 
+          rgba(255, 255, 255, 0.0) 20%,
+          rgba(255, 255, 255, 0.4) 50%, 
+          rgba(255, 255, 255, 0.0) 80%,
+          transparent 100%
       );
-      transform: skewX(-20deg);
-      pointer-events: none; /* Allows clicks to pass through */
-      z-index: 1; /* Sits on top of background color */
+      
+      filter: blur(20px); 
+      opacity: 0.4; 
+      animation: softSheen 6s infinite ease-in-out;
     }
 
-    /* Ensure content sits ABOVE the sheen */
-    .panel h2, .panel p, .grid-1, .grid-2, .grid-3, .panel-split-container {
+    /* Hover on Panel changes the Background Layer */
+    .glass-panel:hover .glass-bg-layer {
+        border-color: rgba(255, 255, 255, 0.25);
+        box-shadow: 
+          inset 3px 3px 8px rgba(255, 255, 255, 0.6),
+          inset 0px 0px 30px rgba(255, 255, 255, 0.2),
+          inset -5px -5px 15px rgba(0, 0, 0, 0.03),
+          0 20px 50px rgba(0, 0, 0, 0.08);
+    }
+    .glass-panel:hover {
+        transform: scale(1.015);
+    }
+
+
+    /* =========================================
+       3. INNER LIQUID TEXT CARDS
+       ========================================= */
+    .inner-liquid-card {
         position: relative;
-        z-index: 2;
+        border-radius: 30px;
+        padding: 30px; 
+        margin-bottom: 25px; 
+        
+        background: transparent;
+        border: 1px solid transparent;
+        transition: all 0.4s ease;
+        overflow: hidden; 
+        z-index: 20;
+    }
+
+    /* Text Card Shine */
+    .inner-liquid-card::after {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      z-index: 1; pointer-events: none;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent);
+      filter: blur(15px);
+      transform: translateX(-150%) skewX(-25deg);
+      opacity: 0; 
+    }
+
+    /* Hover: Liquid Glass Text */
+    .inner-liquid-card:hover {
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(5px);
+        
+        /* Extremely subtle border */
+        border-color: rgba(255, 255, 255, 0.15);
+        
+        /* Soft, blended glow */
+        box-shadow: 
+            inset 1px 1px 12px rgba(255, 255, 255, 0.5), 
+            inset 0 0 20px rgba(255, 255, 255, 0.2), 
+            inset -2px -2px 10px rgba(0,0,0,0.05), 
+            0 10px 20px rgba(0,0,0,0.05); 
     }
     
-    .panel:nth-of-type(1) { margin-top: 50px; }
-
-    /* HOVER EFFECTS */
-    .panel:hover{
-      transform:translateY(-6px) scale(1.01);
-      box-shadow: 0 20px 40px rgba(0,0,0,0.12), inset 0 0 20px rgba(255,255,255,0.5); /* Outer shadow + Inner Glow */
-      border-color: rgba(255, 255, 255, 0.9); /* Brighter edge on hover */
+    .inner-liquid-card:hover::after {
+        opacity: 0.5;
+        animation: softSheen 2s 1 ease-in-out;
     }
 
-    /* Trigger the sheen animation on hover */
-    .panel:hover::before {
-        animation: sheen 0.75s forwards;
+    .inner-liquid-card h2, .inner-liquid-card p {
+        position: relative;
+        z-index: 5;
+        margin: 0; 
+    }
+    .inner-liquid-card h2 { margin-bottom: 15px; }
+
+
+    /* =========================================
+       4. COLORS
+       ========================================= */
+    .header-color .glass-bg-layer { background: rgba(248, 233, 240, 0.85); }
+    .header-color:hover .glass-bg-layer { background: #f0dbe8; }
+
+    .panel-1 .glass-bg-layer { background: rgba(251, 239, 246, 0.85); } 
+    .panel-1:hover .glass-bg-layer { background: #efdce8; }
+
+    .panel-2 .glass-bg-layer { background: rgba(253, 243, 240, 0.85); } 
+    .panel-2:hover .glass-bg-layer { background: #f2e0dc; }
+
+    .panel-3 .glass-bg-layer { background: rgba(245, 245, 240, 0.85); } 
+    .panel-3:hover .glass-bg-layer { background: #e6e6e0; }
+
+
+    /* =========================================
+       5. LAYOUT
+       ========================================= */
+    .contact-panel-container { width: 94%; margin: 30px auto; }
+    .contact-panel{ display: flex; flex-direction: column; align-items: flex-start; gap: 15px; padding: 30px 40px; border-radius: 999px; z-index: 20; }
+    
+    .top-row-content { display: flex; justify-content: space-between; align-items: flex-start; width: 100%; position: relative; z-index: 5; }
+    .header-left { display: flex; flex-direction: column; gap: 10px; padding-left: 20px; max-width: 65%; }
+    .header-left h1{ font-family:'Playfair Display',serif; font-size:44px; letter-spacing:2px; margin-bottom: 0px; line-height: 1; }
+    .header-left .skills-apps { font-family: 'Poppins', sans-serif; font-size: 14px; font-weight: 500; color: #5d5d5d; display: block; margin-bottom: 5px; }
+    .header-description { font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; font-size: 14px; line-height: 1.5; color: #3e3a34; font-weight: 500; }
+    .header-right{ text-align:right; display:flex; flex-direction:column; gap: 0; font-size:14px; padding-top: 10px; }
+    .header-right a{ text-decoration:none; color:#3e3a34; font-weight: 500; margin-bottom: 2px; display: block; }
+    .header-right span { display: block; color: #5d5d5d; }
+    
+    .panel-wrapper { width: 94%; margin: 40px auto; }
+    .panel{ padding: 40px; height: 100%; }
+    
+    .panel h2{ font-family:'Playfair Display',serif; font-size:28px; } 
+    .panel p, .video-description{ font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; color:#4b433b; line-height:1.6; }
+    .panel p{ max-width:580px; }
+
+    /* LAYOUT GRIDS */
+    .split-panel-layout {
+        display: grid; 
+        grid-template-columns: 1fr 1fr; 
+        gap: 30px; 
+        width: 100%;
     }
 
-    /* COLORS (With opacity for glass effect) */
-    .panel-1 { background: rgba(251, 239, 246, 0.7); } 
-    .panel-1:hover { background: rgba(246, 230, 240, 0.85); } 
+    .panel-split-container { display: flex; align-items: center; justify-content: space-between; gap: 50px; width: 100%; }
+    .panel-text-side { flex: 1; text-align: left; display: flex; flex-direction: column; justify-content: center; margin-bottom: 0; }
+    .panel-split-container .grid-2 { flex: 1.2; width: 100%; }
 
-    .panel-2 { background: rgba(253, 243, 240, 0.7); } 
-    .panel-2:hover { background: rgba(247, 232, 228, 0.85); } 
-
-    .panel-3 { background: rgba(245, 245, 240, 0.7); } 
-    .panel-3:hover { background: rgba(238, 238, 230, 0.85); } 
-
-
-    .panel h2{
-      font-family:'Playfair Display',serif;
-      font-size:32px;
-      margin-bottom:10px;
-    }
-
-    .panel p, .video-description{
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-      color:#4b433b;
-      line-height:1.6;
-    }
-
-    .panel p{
-      margin-bottom:40px;
-      max-width:580px;
-    }
-
-    /* SPLIT LAYOUT */
-    .panel-split-container {
-      display: flex;
-      align-items: center; 
-      justify-content: space-between;
-      gap: 50px;
-      width: 100%;
-    }
-
-    .panel-text-side {
-      flex: 1; 
-      text-align: left;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-    }
-
-    .panel-split-container .grid-2 {
-      flex: 1.2; 
-      width: 100%; 
-    }
-
-    /* VIDEO BOXES */
-    .video-box-wrapper{ 
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-      align-items: center; 
-    }
-
-    .video-box{
-      border-radius:26px;
-      overflow:hidden;
-      position:relative;
-      background: rgba(0, 0, 0, 0.05); 
-      transition:0.35s ease;
-      cursor: pointer;
-      z-index: 5; /* Ensures videos are clickable */
-    }
-
-    .video-box.portrait {
-        max-width: 280px; 
-        margin: 0 auto;
-    }
-
-    .video-box:hover{
-      transform:scale(1.03);
-      box-shadow:0 18px 40px rgba(0,0,0,0.22);
-    }
-
-    .video-box.no-pop:hover{
-      transform:none;
-      box-shadow:none;
-    }
-
-    video{
-      width:100%;
-      height:100%;
-      object-fit:cover;
-      border-radius:26px; 
-    }
-
-    .video-description{
-      font-size: 14px;
-      padding: 5px 0 10px;
-      color: #6a6a6a;
-      min-height: 70px; 
-      max-width: 280px; 
-      margin: 0 auto;
-      text-align: center;
-    }
-
-    .grid-1{display:grid;grid-template-columns:1fr;}
     .grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:40px;}
     .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:35px;}
+    
+    .col-content { display: flex; flex-direction: column; height: 100%; justify-content: space-between; } 
 
+    /* =========================================
+       6. VIDEO BOX STYLES (Clean Blend)
+       ========================================= */
+    .video-box-wrapper{ display: flex; flex-direction: column; gap: 15px; align-items: center; }
+    
+    .video-box{ 
+        border-radius: 20px; 
+        overflow: hidden; 
+        position: relative; 
+        
+        /* CLEAN BLEND: No border, No background */
+        background: transparent; 
+        border: none;
+        box-shadow: none; /* No shadow in resting state */
+        
+        transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease; 
+        cursor: pointer; 
+        z-index: 20; 
+    }
+    
+    .video-box.portrait { max-width: 280px; margin: 0 auto; }
+    
+    /* HOVER: POP OUT (For Panels 2 & 3) */
+    .video-box:hover{ 
+        transform: scale(1.04); 
+        box-shadow: 0 20px 40px rgba(0,0,0,0.2); 
+        z-index: 30;
+    }
+    
+    /* HOVER: NO POP (For Panel 1 Split Videos) */
+    .video-box.no-pop:hover {
+        transform: none !important;
+        box-shadow: none !important;
+        cursor: default;
+    }
+
+    video{ width:100%; height:100%; object-fit:cover; border-radius: 20px; display: block; }
+    
+    .video-description{ font-size: 14px; padding: 5px 0 10px; color: #6a6a6a; min-height: 70px; max-width: 280px; margin: 0 auto; text-align: center; }
     .portrait{aspect-ratio:9/16;}
     .landscape{aspect-ratio:16/9;}
 
     /* SOUND BUTTON */
-    .sound-btn{
-      position:absolute;
-      bottom:16px;
-      right:16px;
-      width:46px;
-      height:46px;
-      border-radius:50%;
-      border:none;
-      background:rgba(255,255,255,0.88);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      cursor:pointer;
-      font-size:18px;
-      opacity:0;
-      transition:0.3s ease;
-    }
-
-    .video-box:hover .sound-btn{
-      opacity:1;
-    }
+    .sound-btn{ position:absolute; bottom:16px; right:16px; width:46px; height:46px; border-radius:50%; border:none; background:rgba(255,255,255,0.7); backdrop-filter: blur(5px); display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:18px; opacity:0; transition:0.3s ease; }
+    .video-box:hover .sound-btn{ opacity:1; }
     
     /* MOBILE */
     @media(max-width:900px){
-      .grid-2,.grid-3{grid-template-columns:1fr;}
-      .contact-panel {
-        gap: 15px;
-        padding: 25px 30px;
-        border-radius: 40px; 
-        height: auto;
-      }
-      .top-row-content {
-          flex-direction: column;
-          align-items: center;
-          gap: 20px;
-      }
+      .split-panel-layout, .grid-2, .grid-3 { grid-template-columns: 1fr; }
+      .contact-panel { gap: 15px; padding: 25px 30px; border-radius: 40px; height: auto; }
+      .top-row-content { flex-direction: column; align-items: center; gap: 20px; }
       .header-right{text-align:center; padding-top: 0;}
-      .header-left {
-          text-align:center; 
-          align-items:center;
-          padding-left: 0; 
-          max-width: 100%;
-      }
+      .header-left { text-align:center; align-items:center; padding-left: 0; max-width: 100%; }
       .header-description { text-align: center; }
-      .panel{padding:30px;width:92%;}
+      .panel{padding:30px;width:92%; margin: 20px auto; width: 92%;}
       .panel:nth-of-type(1) { margin-top: 40px; } 
-      .panel-split-container {
-        flex-direction: column;
-        text-align: center;
-      }
-      .panel-text-side {
-        align-items: center; 
-        margin-bottom: 30px;
-      }
+      .panel-split-container { flex-direction: column; text-align: center; }
+      .panel-text-side { align-items: center; margin-bottom: 30px; }
       .video-box.portrait { max-width: none; }
       .video-description { max-width: none; }
       .panel h2 { justify-content: center; gap: 10px; }
+      .inner-liquid-card { padding: 20px; }
     }
   </style>
 </head>
 <body>
 
 <div class="contact-panel-container">
-    <header class="contact-panel">
+    <header class="glass-panel contact-panel header-color">
+        <div class="glass-bg-layer"></div>
         <div class="top-row-content">
             <div class="header-left">
                 <div>
@@ -394,106 +289,139 @@
     </header>
 </div>
 
-<section class="panel panel-1">
-  <h2>Lyrical Video</h2>
-  <p>
-    Emotion-driven lyrical storytelling, crafted with smooth cinematic transitions, rhythm-based cuts and visual flow that enhances the feel of the music.
-  </p>
+<div class="panel-wrapper">
+    <div class="split-panel-layout">
+        
+        <div class="glass-panel panel panel-1">
+            <div class="glass-bg-layer"></div>
+            <div class="col-content">
+                <div class="inner-liquid-card">
+                    <h2>Lyrical Video</h2>
+                    <p>
+                        Emotion-driven lyrical storytelling, crafted with smooth cinematic transitions, rhythm-based cuts and visual flow that enhances the feel of the music.
+                    </p>
+                </div>
+                <div class="video-box landscape no-pop">
+                    <video muted playsinline preload="metadata">
+                        <source src="video1.mp4" type="video/mp4">
+                    </video>
+                    <button class="sound-btn">🔇</button>
+                </div>
+            </div>
+        </div>
 
-  <div class="grid-1">
-    <div class="video-box landscape no-pop">
-      <video muted playsinline preload="metadata">
-        <source src="video1.mp4" type="video/mp4">
-      </video>
-      <button class="sound-btn">🔇</button>
+        <div class="glass-panel panel panel-1">
+            <div class="glass-bg-layer"></div>
+            <div class="col-content">
+                <div class="inner-liquid-card">
+                    <h2>Talking Head & Info</h2>
+                    <p>
+                        Clean, engaging edits for informational content. I use B-roll, dynamic pacing, and visual aids to retain audience attention while ensuring the message is clear.
+                    </p>
+                </div>
+                <div class="video-box landscape no-pop">
+                    <video muted playsinline preload="metadata">
+                        <source src="video7.mp4" type="video/mp4">
+                    </video>
+                    <button class="sound-btn">🔇</button>
+                </div>
+            </div>
+        </div>
+
     </div>
-  </div>
-</section>
+</div>
 
-<section class="panel panel-2">
-  <div class="panel-split-container">
-    
-    <div class="panel-text-side">
-      <h2>Reels and Shorts</h2>
-      <p>
-        High-impact vertical content designed for social media growth, engagement and modern viewing habits. <br>
-        Fast-paced editing with trending audio integration maximizes audience retention. <br>
-        Dynamic captions and motion graphics convey messages quickly, even without sound.
-      </p>
-    </div>
+<div class="panel-wrapper">
+    <section class="glass-panel panel panel-2">
+        <div class="glass-bg-layer"></div>
+        <div class="panel-split-container">
+            
+            <div class="inner-liquid-card panel-text-side">
+                <h2>Reels and Shorts</h2>
+                <p>
+                    High-impact vertical content designed for social media growth, engagement and modern viewing habits. <br>
+                    Fast-paced editing with trending audio integration maximizes audience retention. <br>
+                    Dynamic captions and motion graphics convey messages quickly, even without sound.
+                </p>
+            </div>
 
-    <div class="grid-2">
-      <div class="video-box portrait">
-        <video muted playsinline preload="metadata">
-          <source src="video2.mp4" type="video/mp4">
-        </video>
-        <button class="sound-btn">🔇</button>
-      </div>
+            <div class="grid-2">
+                <div class="video-box portrait">
+                    <video muted playsinline preload="metadata">
+                        <source src="video2.mp4" type="video/mp4">
+                    </video>
+                    <button class="sound-btn">🔇</button>
+                </div>
 
-      <div class="video-box portrait">
-        <video muted playsinline preload="metadata">
-          <source src="video3.mp4#t=5" type="video/mp4">
-        </video>
-        <button class="sound-btn">🔇</button>
-      </div>
-    </div>
+                <div class="video-box portrait">
+                    <video muted playsinline preload="metadata">
+                        <source src="video3.mp4#t=5" type="video/mp4">
+                    </video>
+                    <button class="sound-btn">🔇</button>
+                </div>
+            </div>
 
-  </div>
-</section>
+        </div>
+    </section>
+</div>
 
-<section class="panel panel-3">
-  <h2>Faceless and Lifestyle</h2>
-  <p>
-    Minimal, aesthetic and story-focused visuals crafted for brands, concepts and lifestyle storytelling without showing faces.
-  </p>
+<div class="panel-wrapper">
+    <section class="glass-panel panel panel-3">
+        <div class="glass-bg-layer"></div>
+        <div class="inner-liquid-card">
+            <h2>Faceless and Lifestyle</h2>
+            <p>
+                Minimal, aesthetic and story-focused visuals crafted for brands, concepts and lifestyle storytelling without showing faces.
+            </p>
+        </div>
 
-  <div class="grid-3">
-    <div class="video-box-wrapper">
-      <div class="video-box portrait">
-        <video class="auto-play-video" muted playsinline preload="metadata">
-          <source src="video4.mp4" type="video/mp4">
-        </video>
-        <button class="sound-btn">🔇</button>
-      </div>
-      <div class="video-description">
-        **Faceless Narratives**
-        <br>Abstract visuals and crisp motion graphics used to convey complex ideas and brand identity without relying on human presence.
-      </div>
-    </div>
+        <div class="grid-3">
+            <div class="video-box-wrapper">
+                <div class="video-box portrait">
+                    <video class="auto-play-video" muted playsinline preload="metadata">
+                        <source src="video4.mp4" type="video/mp4">
+                    </video>
+                    <button class="sound-btn">🔇</button>
+                </div>
+                <div class="video-description">
+                    **Faceless Narratives**
+                    <br>Abstract visuals and crisp motion graphics used to convey complex ideas and brand identity without relying on human presence.
+                </div>
+            </div>
 
-    <div class="video-box-wrapper">
-      <div class="video-box portrait">
-        <video class="auto-play-video" muted playsinline preload="metadata">
-           <source src="video5.mp4#t=5" type="video/mp4">
-        </video>
-        <button class="sound-btn">🔇</button>
-      </div>
-      <div class="video-description">
-        **Aesthetic Mood Pieces**
-        <br>Clean cuts and soft color grading emphasize tranquility and modern living, perfect for wellness and luxury branding.
-      </div>
-    </div>
+            <div class="video-box-wrapper">
+                <div class="video-box portrait">
+                    <video class="auto-play-video" muted playsinline preload="metadata">
+                        <source src="video5.mp4#t=5" type="video/mp4">
+                    </video>
+                    <button class="sound-btn">🔇</button>
+                </div>
+                <div class="video-description">
+                    **Aesthetic Mood Pieces**
+                    <br>Clean cuts and soft color grading emphasize tranquility and modern living, perfect for wellness and luxury branding.
+                </div>
+            </div>
 
-    <div class="video-box-wrapper">
-      <div class="video-box portrait">
-        <video class="auto-play-video" muted playsinline preload="metadata">
-          <source src="video6.mp4" type="video/mp4">
-        </video>
-        <button class="sound-btn">🔇</button>
-      </div>
-      <div class="video-description">
-        **Cinematic Concepts**
-        <br>Rich texture, slow motion, and deliberate composition create deep visual impact and narrative tension, even in short form.
-      </div>
-    </div>
-  </div>
-</section>
+            <div class="video-box-wrapper">
+                <div class="video-box portrait">
+                    <video class="auto-play-video" muted playsinline preload="metadata">
+                        <source src="video6.mp4" type="video/mp4">
+                    </video>
+                    <button class="sound-btn">🔇</button>
+                </div>
+                <div class="video-description">
+                    **Cinematic Concepts**
+                    <br>Rich texture, slow motion, and deliberate composition create deep visual impact and narrative tension, even in short form.
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
 
 
 <script>
-  // Helper to ensure video starts from 0 if it has a preview offset (like #t=5)
+  // --- EXISTING VIDEO LOGIC ---
   const safePlay = (video) => {
-    // If we haven't tracked a "start" yet, reset time to 0
     if (!video.dataset.hasStarted) {
         video.currentTime = 0;
         video.dataset.hasStarted = "true";
@@ -501,15 +429,12 @@
     video.play();
   };
 
-  // --- PANEL 3 AUTO-PLAY OBSERVER ---
   const autoPlayObserver = new IntersectionObserver((entries, observer) => {
     entries.forEach(entry => {
       const video = entry.target;
-      // Only play if it enters view AND hasn't played yet
-      // We use 'hasStarted' to track if it has ever been auto-played/played
       if (entry.isIntersecting && !video.dataset.hasStarted) {
         video.muted = true; 
-        safePlay(video); // Use safePlay to reset timestamp to 0
+        safePlay(video); 
       }
     });
   }, { threshold: 0.5 }); 
@@ -518,64 +443,43 @@
     autoPlayObserver.observe(video);
   });
 
-
-  // --- MAIN INTERACTION LOGIC ---
   document.querySelectorAll('.video-box').forEach(box => {
     const video = box.querySelector('video');
     const button = box.querySelector('.sound-btn');
-    
-    // Check which panel this video belongs to
     const isPanel3 = box.closest('.panel-3') !== null;
     
-    // Initialize state
     video.muted = true;
     button.textContent = "🔇";
     let soundOn = false; 
 
-    // 1. Mouse Enter: Play (safely from 0) and Unmute if needed
     box.addEventListener('mouseenter', () => {
-      // Use safePlay to ensure we jump from the thumbnail (5s) back to 0s
       safePlay(video);
-
       if (soundOn) {
         video.muted = false;
       }
     });
     
-    // 2. Mouse Leave Logic
     box.addEventListener('mouseleave', () => {
-       // Always MUTE immediately
        video.muted = true;
-
        if (isPanel3) {
-           // Panel 3 keeps playing (muted)
        } else {
-           // Panels 1 & 2
            if (soundOn) {
-               // If sound was ON, we let it keep playing (muted)
            } else {
-               // If sound was OFF, we pause
                video.pause();
            }
        }
     });
 
-    // 3. Video Ended: Reset
     video.addEventListener('ended', () => {
       video.pause();
       video.currentTime = 0; 
-      // Note: We don't reset 'hasStarted' because we don't want it to 
-      // snap back to the #t=5 thumbnail, we want it to sit at 0:00 (poster frame)
     });
 
-    // 4. Click to Toggle Sound
     box.addEventListener('click', () => {
       soundOn = !soundOn;
       video.muted = !soundOn;
       button.textContent = soundOn ? "🔊" : "🔇";
-      
       if (soundOn) {
-        // Ensure it plays if clicked while paused
         safePlay(video);
       }
     });
@@ -584,4 +488,3 @@
 
 </body>
 </html>
-
