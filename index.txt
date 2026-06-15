@@ -1,0 +1,1343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Abhiram | Video Editing Portfolio</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Sans:wght@200;300;400;500&family=Pinyon+Script&display=swap" rel="stylesheet">
+
+  <style>
+    /* === RESET & CSS VARIABLES === */
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+    :root {
+      --cream:      #f9f1eb;
+      --blush:      #f2ddd5;
+      --rose:       #e8c4b8;
+      --dusty:      #c9a79b;
+      --bark:       #3e2f2a;
+      --ink:        #1e1714;
+      --smoke:      #7a6a64;
+      --glass-bg:   rgba(255,255,255,0.38);
+      --glass-border: rgba(255,255,255,0.55);
+      --shadow-soft: 0 8px 40px rgba(62,47,42,0.08);
+      --shadow-lift: 0 20px 60px rgba(62,47,42,0.14);
+      --radius-xl:  32px;
+      --radius-lg:  22px;
+      --radius-md:  14px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--cream);
+      color: var(--ink);
+      overflow-x: hidden;
+      min-height: 100vh;
+      position: relative;
+    }
+
+    /* === GRAIN OVERLAY === */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: 999;
+      pointer-events: none;
+      opacity: 0.028;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    }
+
+    /* === AMBIENT BACKGROUND BLOBS === */
+    .ambient {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(80px);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .ambient-1 { width: 600px; height: 600px; background: radial-gradient(circle, rgba(232,196,184,0.35) 0%, transparent 70%); top: -150px; left: -200px; }
+    .ambient-2 { width: 500px; height: 500px; background: radial-gradient(circle, rgba(242,221,213,0.3) 0%, transparent 70%); bottom: 200px; right: -150px; }
+    .ambient-3 { width: 400px; height: 400px; background: radial-gradient(circle, rgba(201,167,155,0.2) 0%, transparent 70%); top: 50%; left: 40%; }
+
+    /* === GIANT BG ICONS === */
+    .bg-icon-giant {
+      position: absolute;
+      z-index: 1;
+      opacity: 0.04;
+      pointer-events: none;
+      width: 480px;
+      height: auto;
+    }
+    .bg-insta-giant { top: 120px; left: -160px; transform: rotate(-12deg); }
+    .bg-yt-giant    { top: -20px; right: -140px; transform: rotate(12deg); }
+
+    /* === ANIMATIONS === */
+    @keyframes softSheen {
+      0%   { transform: translateX(-150%) skewX(-25deg); }
+      60%  { transform: translateX(280%) skewX(-25deg); }
+      100% { transform: translateX(280%) skewX(-25deg); }
+    }
+    @keyframes liquidShine {
+      0%   { transform: translateX(-150%) skewX(-25deg); opacity:0; }
+      50%  { transform: translateX(250%) skewX(-25deg); opacity:0.55; }
+      100% { transform: translateX(250%) skewX(-25deg); opacity:0; }
+    }
+    @keyframes float-yt    { 0%,100%{transform:translateY(0) rotate(-15deg);} 50%{transform:translateY(-10px) rotate(-15deg);} }
+    @keyframes float-insta { 0%,100%{transform:translateY(0) rotate(12deg);}  50%{transform:translateY(-10px) rotate(12deg);} }
+    @keyframes float-x     { 0%,100%{transform:translateY(0) rotate(10deg);}  50%{transform:translateY(-10px) rotate(10deg);} }
+    @keyframes float-hover-yt    { 0%,100%{transform:translateY(0) scale(1.1) rotate(-15deg);} 50%{transform:translateY(-14px) scale(1.1) rotate(-15deg);} }
+    @keyframes float-hover-insta { 0%,100%{transform:translateY(0) scale(1.1) rotate(12deg);} 50%{transform:translateY(-14px) scale(1.1) rotate(12deg);} }
+    @keyframes float-hover-x     { 0%,100%{transform:translateY(0) scale(1.1) rotate(10deg);} 50%{transform:translateY(-14px) scale(1.1) rotate(10deg);} }
+    @keyframes textShine { to { background-position: -200% center; } }
+    @keyframes fadeInText { from{opacity:0;transform:translateY(6px);} to{opacity:1;transform:translateY(0);} }
+    @keyframes scrollLeft {
+      0%   { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+    @keyframes tagFloat { 0%,100%{transform:translateY(0px);} 50%{transform:translateY(-4px);} }
+
+    /* === GLASS PANEL ENGINE === */
+    .glass-panel {
+      position: relative;
+      z-index: 10;
+      overflow: hidden;
+      border-radius: var(--radius-xl);
+      transition: transform 0.5s cubic-bezier(0.25,0.8,0.25,1), box-shadow 0.5s ease;
+      display: flex;
+      flex-direction: column;
+    }
+    .glass-bg-layer {
+      position: absolute;
+      inset: 0;
+      border-radius: var(--radius-xl);
+      border: 1px solid var(--glass-border);
+      box-shadow: var(--shadow-soft);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      z-index: -1;
+      transition: all 0.5s ease;
+      overflow: hidden;
+    }
+    .glass-bg-layer::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      pointer-events: none;
+      background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0) 20%, rgba(255,255,255,0.45) 50%, rgba(255,255,255,0) 80%, transparent 100%);
+      filter: blur(20px);
+      opacity: 0.4;
+      animation: softSheen 7s infinite ease-in-out;
+    }
+    .glass-panel:hover .glass-bg-layer {
+      border-color: rgba(255,255,255,0.7);
+      box-shadow:
+        inset 3px 3px 10px rgba(255,255,255,0.65),
+        inset 0px 0px 30px rgba(255,255,255,0.22),
+        inset -5px -5px 15px rgba(62,47,42,0.03),
+        var(--shadow-lift);
+    }
+    .glass-panel:hover { transform: scale(1.012); }
+    .contact-panel.glass-panel:hover { transform: none !important; }
+    .contact-panel:hover .glass-bg-layer { border-color: var(--glass-border) !important; box-shadow: var(--shadow-soft) !important; }
+
+    /* === INNER LIQUID CARD === */
+    .inner-liquid-card {
+      position: relative;
+      border-radius: var(--radius-lg);
+      padding: 22px 24px;
+      background: transparent;
+      border: 1px solid transparent;
+      overflow: hidden;
+      z-index: 20;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      transition: all 0.5s cubic-bezier(0.4,0,0.2,1);
+    }
+    .inner-liquid-card:hover {
+      background: rgba(255,255,255,0.28);
+      backdrop-filter: blur(22px);
+      -webkit-backdrop-filter: blur(22px);
+      border-top: 1px solid rgba(255,255,255,0.92);
+      border-left: 1px solid rgba(255,255,255,0.92);
+      border-right: 1px solid rgba(255,255,255,0.45);
+      border-bottom: 1px solid rgba(255,255,255,0.45);
+      box-shadow: 0 8px 32px rgba(62,47,42,0.08);
+    }
+    .inner-liquid-card::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.9), transparent);
+      transform: translateX(-150%) skewX(-25deg);
+    }
+    .inner-liquid-card:hover::after { animation: liquidShine 1.5s 1 ease-in-out; }
+    .inner-liquid-card h2, .inner-liquid-card p { position: relative; z-index: 5; margin: 0; }
+    .inner-liquid-card h2 { margin-bottom: 8px; line-height: 1.4; padding-bottom: 4px; }
+
+    /* === WATERMARKS === */
+    .watermark-logo {
+      position: absolute;
+      right: -30px; top: 50%;
+      transform: translateY(-50%) scale(0.9) rotate(10deg);
+      height: 95%; width: auto;
+      opacity: 0; z-index: 1;
+      pointer-events: none;
+      transition: all 0.7s cubic-bezier(0.25,0.8,0.25,1);
+      filter: grayscale(100%) contrast(0.8) brightness(1.1);
+    }
+    .inner-liquid-card:hover .watermark-logo                { opacity: 0.09; right: 30px; transform: translateY(-50%) scale(1) rotate(0deg); }
+    .inner-liquid-card:hover .watermark-logo.wm-side-1      { right: 20px; top:50%; transform:translateY(-50%) rotate(0deg); }
+    .inner-liquid-card:hover .watermark-logo.wm-side-2      { right: 130px; top:50%; transform:translateY(-50%) rotate(0deg) scale(1.1); filter:grayscale(100%) contrast(1.3) brightness(0.5)!important; opacity:0.14!important; transition-delay:0.1s; }
+    .inner-liquid-card:hover .watermark-logo.wm-side-3      { right: 250px; top:50%; transform:translateY(-50%) rotate(0deg) scale(0.9); filter:grayscale(100%) contrast(1.3) brightness(0.5)!important; opacity:0.14!important; transition-delay:0.2s; }
+
+    /* === SOCIAL FLOATS === */
+    .social-float { position:absolute; width:100px; height:auto; opacity:0; z-index:5; pointer-events:auto; transition:all 0.8s cubic-bezier(0.34,1.56,0.64,1); }
+    .sf-yt    { top:-120px; left:8%;  transform:rotate(-15deg); }
+    .sf-insta { top:-120px; left:35%; transform:rotate(12deg); }
+    .sf-x     { bottom:-120px; left:22%; transform:rotate(10deg); }
+    .glass-panel:hover .sf-yt    { top:40px;    opacity:1; transform:rotate(-15deg); animation:float-yt 4s ease-in-out infinite 0.6s; }
+    .glass-panel:hover .sf-insta { top:25px;    opacity:1; transform:rotate(12deg);  animation:float-insta 5s ease-in-out infinite 0.6s; }
+    .glass-panel:hover .sf-x     { bottom:30px; opacity:1; transform:rotate(10deg);  animation:float-x 4.5s ease-in-out infinite 0.6s; }
+    .social-float:hover { filter:drop-shadow(0 15px 15px rgba(0,0,0,0.18)); z-index:60; cursor:pointer; }
+    .sf-yt:hover    { animation:float-hover-yt    3s ease-in-out infinite !important; }
+    .sf-insta:hover { animation:float-hover-insta 3s ease-in-out infinite !important; }
+    .sf-x:hover     { animation:float-hover-x     3s ease-in-out infinite !important; }
+
+    /* === PANEL COLORS === */
+    .header-color   .glass-bg-layer { background: rgba(242,221,213,0.55); }
+    .header-color:hover .glass-bg-layer { background: rgba(235,208,198,0.70); }
+    .panel-1-color  .glass-bg-layer { background: rgba(249,241,235,0.55); }
+    .panel-1-color:hover .glass-bg-layer { background: rgba(238,226,218,0.70); }
+    .panel-3-color  .glass-bg-layer { background: rgba(253,243,240,0.55); }
+    .panel-3-color:hover .glass-bg-layer { background: rgba(242,224,218,0.70); }
+    .panel-3-color .glass-bg-layer::after {
+      content:""; position:absolute; inset:0;
+      background-image:url('timeline.png'); background-size:cover; background-position:center;
+      opacity:0.1; transition:opacity 0.5s ease; mix-blend-mode:overlay; z-index:1; pointer-events:none;
+    }
+    .panel-3-color:hover .glass-bg-layer::after { opacity:0.22; }
+    .panel-4-color  .glass-bg-layer { background: rgba(245,240,236,0.55); }
+    .panel-4-color:hover .glass-bg-layer { background: rgba(230,224,218,0.70); }
+    .panel-4-color .glass-bg-layer::after {
+      content:""; position:absolute; inset:0;
+      background-image:url('timeline.png'); background-size:cover; background-position:center;
+      opacity:0.1; transition:opacity 0.5s ease; mix-blend-mode:overlay; z-index:1; pointer-events:none; transform:scaleX(-1);
+    }
+    .panel-4-color:hover .glass-bg-layer::after { opacity:0.22; }
+
+    /* === FISHEYE PANEL COLORS === */
+    .panel-fish-edu .glass-bg-layer   { background: rgba(240,233,246,0.55); }
+    .panel-fish-edu:hover .glass-bg-layer { background: rgba(226,216,238,0.70); }
+    .panel-fish-ai  .glass-bg-layer   { background: rgba(230,240,245,0.55); }
+    .panel-fish-ai:hover .glass-bg-layer  { background: rgba(215,228,238,0.70); }
+
+    /* === LAYOUT === */
+    .container { width: 94%; margin: 0 auto; position: relative; z-index: 2; }
+
+    /* HEADER */
+    .contact-panel-container { width: 94%; margin: 28px auto 0; }
+    .contact-panel {
+      display:flex; flex-direction:column; align-items:flex-start;
+      gap:12px; padding:28px 44px;
+      border-radius: 999px; z-index:20;
+    }
+    .top-row-content { display:flex; justify-content:space-between; align-items:flex-start; width:100%; position:relative; z-index:5; }
+    .header-left { display:flex; flex-direction:column; gap:10px; padding-left:20px; max-width:60%; }
+    .header-left h1 {
+      font-family:'Cormorant Garamond',serif;
+      font-size: 52px; font-weight:300; letter-spacing:4px;
+      margin-bottom:0; line-height:1; color: var(--bark);
+    }
+    .header-left .skills-apps {
+      font-family:'DM Sans',sans-serif; font-size:11px; font-weight:300;
+      color:var(--smoke); display:block; margin-bottom:4px; letter-spacing: 3px; text-transform: uppercase;
+    }
+    .header-description {
+      font-family:'DM Sans',sans-serif; font-size:13px; line-height:1.65;
+      color:var(--smoke); font-weight:300; max-width: 400px;
+    }
+    .header-right { text-align:right; display:flex; flex-direction:column; gap:0; font-size:13px; padding-top:6px; justify-content:space-between; height:100%; }
+    .header-right a { text-decoration:none; color:var(--bark); font-weight:400; margin-bottom:2px; display:block; letter-spacing:0.3px; }
+    .header-right span { display:block; color:var(--smoke); font-size:11px; letter-spacing:2px; text-transform:uppercase; }
+    .software-icons { display:flex; gap:14px; justify-content:flex-end; margin-top:8px; align-items:flex-start; }
+    .software-icons img { width:72px; height:auto; object-fit:contain; opacity:0.85; transition:transform 0.3s ease,opacity 0.2s ease; filter:drop-shadow(0 4px 8px rgba(62,47,42,0.12)); }
+    .software-icons img:hover { transform:scale(1.1); opacity:1; }
+
+    /* NICHE DIVIDER */
+    .niche-divider {
+      text-align:center; width:100%; max-width:860px;
+      margin: 10px auto 40px auto; position:relative; z-index:15; padding:0 20px;
+    }
+    .niche-divider h2 {
+      font-family:'Pinyon Script',cursive; font-size:62px; font-weight:400;
+      background: linear-gradient(110deg, var(--bark) 38%, var(--dusty) 50%, var(--bark) 62%);
+      background-size:200% auto; -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+      animation:textShine 5s linear infinite; line-height:1.2; letter-spacing:1px;
+      transform:rotate(-1.5deg); transition:transform 0.4s ease;
+    }
+    .niche-divider:hover h2 { transform: rotate(0deg); }
+
+    /* SECTION LABEL */
+    .section-label {
+      display: flex; align-items: center; gap: 16px;
+      margin-bottom: 20px;
+    }
+    .section-label-line {
+      height: 1px;
+      background: linear-gradient(to right, transparent, var(--dusty), transparent);
+      flex: 1;
+    }
+    .section-label span {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 10px; letter-spacing: 4px; text-transform: uppercase;
+      color: var(--smoke); white-space: nowrap;
+    }
+
+    /* PANELS */
+    .panel-wrapper { width:94%; margin:30px auto; }
+    .panel { padding:28px; height:100%; }
+    .panel h2, .end-card-text h3 { font-family:'Cormorant Garamond',serif; font-weight:500; color: var(--bark); }
+    .panel h2 { font-size:28px; letter-spacing:1px; }
+    .panel p, .video-description, .end-card-text p { font-family:'DM Sans',sans-serif; color:var(--smoke); line-height:1.7; font-size:13px; }
+    .panel p { max-width:560px; }
+    .independent-panels-row { display:flex; flex-direction:row; width:94%; margin:30px auto; gap:28px; align-items:stretch; }
+    .panel-1, .panel-2 { width:50%; min-height:400px; }
+    .panel-split-container { display:flex; align-items:center; justify-content:space-between; gap:50px; width:100%; }
+    .panel-text-side { flex:1; text-align:left; display:flex; flex-direction:column; justify-content:center; margin-bottom:0; }
+    .panel-split-container .grid-2 { flex:1.2; width:100%; }
+    .grid-2 { display:grid; grid-template-columns:repeat(2,1fr); gap:38px; }
+    .grid-3 { display:grid; grid-template-columns:repeat(3,1fr); gap:32px; }
+    .reels-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:11px; width:100%; flex:1.6; }
+    .reels-grid .video-box.portrait { max-width:100%!important; margin:0; aspect-ratio:9/16; }
+    .col-content { display:flex; flex-direction:column; height:100%; justify-content:flex-start; gap:20px; }
+    .panel-4 { gap:38px; }
+    .panel-4 .inner-liquid-card { flex-grow:0; }
+
+    /* VIDEO BOX */
+    .video-box-wrapper { display:flex; flex-direction:column; gap:14px; align-items:center; }
+    .video-box {
+      border-radius:var(--radius-lg);
+      overflow:hidden; position:relative; background:transparent;
+      border:none; box-shadow:none; cursor:pointer; z-index:20;
+      width:100%; flex-shrink:0; height:280px;
+      transition: transform 0.4s cubic-bezier(0.175,0.885,0.32,1.275), box-shadow 0.4s ease, width 0.6s ease;
+      transform:translateZ(0);
+      -webkit-mask-image:-webkit-radial-gradient(white,black);
+      mask-image:radial-gradient(white,black);
+    }
+    .video-box.portrait { height:auto; aspect-ratio:9/16; max-width:280px; margin:0 auto; }
+    .video-box:not(.no-pop):hover { transform:scale(1.04); box-shadow:0 20px 44px rgba(62,47,42,0.2); z-index:30; }
+    .video-box.no-pop:hover { transform:none!important; box-shadow:none!important; cursor:default; }
+    video { width:100%; height:100%; object-fit:cover; border-radius:inherit; display:block; background:transparent; }
+    .ignore-audio { position:absolute; bottom:12px; left:15px; font-size:10px; color:rgba(255,255,255,0.45); z-index:10; pointer-events:none; font-weight:300; font-family:'DM Sans',sans-serif; letter-spacing:0.8px; }
+    .video-description { font-size:12px; padding:5px 0 10px; color:var(--smoke); min-height:70px; max-width:280px; margin:0 auto; text-align:center; line-height:1.6; }
+    .sound-btn { position:absolute; bottom:14px; right:14px; width:40px; height:40px; border-radius:50%; border:none; background:rgba(255,255,255,0.65); backdrop-filter:blur(6px); display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:16px; opacity:0; transition:0.3s ease; z-index:50; }
+    .video-box:hover .sound-btn { opacity:1; }
+
+    /* INTERNAL SLIDER */
+    .internal-slider-viewport { width:100%; height:100%; overflow:hidden; position:relative; border-radius:inherit; }
+    .internal-slider-track { display:flex; width:100%; height:100%; transition:transform 0.5s cubic-bezier(0.25,0.8,0.25,1); }
+    .slide-wrapper { width:100%; height:100%; flex-shrink:0; overflow:hidden; position:relative; border-radius:inherit; }
+    .slide-wrapper video { width:100%; height:100%; object-fit:cover; border-radius:inherit; }
+    .slider-dots { position:absolute; bottom:7px; left:50%; transform:translateX(-50%); display:flex; gap:7px; z-index:50; opacity:0; pointer-events:none; transition:opacity 0.3s ease; }
+    #panel2-main-wrapper:hover .slider-dots, #panel1-main-wrapper:hover .slider-dots { opacity:1; pointer-events:auto; }
+    .dot { width:7px; height:7px; border-radius:50%; background-color:rgba(62,47,42,0.2); cursor:pointer; transition:all 0.3s ease; }
+    .dot.active { background-color:var(--bark); transform:scale(1.25); }
+
+    /* DYNAMIC ANIMATION */
+    .dynamic-media-wrapper { display:flex; flex-direction:row; align-items:stretch; width:100%; position:relative; }
+    .end-card-text { width:0; opacity:0; display:flex; flex-direction:column; justify-content:center; overflow:hidden; transition:width 0.6s cubic-bezier(0.25,0.8,0.25,1),opacity 0.5s ease 0.1s; position:relative; }
+    .text-static-width { width:340px; flex-shrink:0; padding-left:22px; padding-right:18px; white-space:normal; position:relative; z-index:5; margin-top:-100px; }
+    .end-card-text h3 { font-size:17px; margin-bottom:7px; white-space:nowrap; letter-spacing:0.5px; }
+    .end-card-text p { font-size:12px; line-height:1.65; }
+    .divider-line { position:absolute; left:0; top:15%; bottom:15%; width:1px; background:linear-gradient(to bottom,transparent,rgba(62,47,42,0.15),transparent); opacity:0; transition:opacity 0.5s ease 0.2s; }
+    .bg-graph { position:absolute; top:auto; right:0; bottom:0; left:0; width:100%; height:auto; max-height:80%; object-fit:contain; object-position:bottom; opacity:0; z-index:0; pointer-events:none; transition:opacity 0.5s ease 0.3s; border-radius:0 0 20px 20px; transform:translateY(9%); }
+    .dynamic-media-wrapper.viewed .video-box { width:35%; }
+    .dynamic-media-wrapper.viewed .end-card-text { width:65%; opacity:1; mask-image:linear-gradient(to right,rgba(0,0,0,1) 0%,rgba(0,0,0,1) 100%); -webkit-mask-image:linear-gradient(to right,rgba(0,0,0,1) 0%,rgba(0,0,0,1) 100%); }
+    .dynamic-media-wrapper.viewed .divider-line { opacity:1; }
+    .dynamic-media-wrapper.viewed .bg-graph { opacity:0.13; }
+    #panel2-controller .text-group, #panel1-controller .text-group { display:none; width:100%; }
+    #panel2-controller .text-group.active, #panel1-controller .text-group.active { display:block; animation:fadeInText 0.5s ease; }
+    .scale-up-103 { transform:scale(1.03); }
+
+    /* ===================================================
+       FISHEYE SCROLL PANELS
+       =================================================== */
+    .fisheye-panel-wrapper { width: 94%; margin: 30px auto; }
+
+    .fisheye-panel {
+      padding: 32px 32px 28px;
+      overflow: hidden;
+    }
+
+    .fisheye-header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      margin-bottom: 28px;
+      gap: 20px;
+      position: relative;
+      z-index: 5;
+    }
+
+    .fisheye-header-left h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 32px; font-weight: 500;
+      color: var(--bark); letter-spacing: 1px;
+      line-height: 1;
+    }
+    .fisheye-header-left p {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 12px; color: var(--smoke);
+      margin-top: 6px; line-height: 1.6;
+      max-width: 360px;
+    }
+
+    .fisheye-tag {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(62,47,42,0.06);
+      border: 1px solid rgba(62,47,42,0.1);
+      border-radius: 999px;
+      padding: 6px 14px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 10px; letter-spacing: 3px; text-transform: uppercase;
+      color: var(--smoke);
+      animation: tagFloat 4s ease-in-out infinite;
+    }
+
+    /* SCROLL TRACK */
+    .fisheye-scroll-container {
+      position: relative;
+      width: 100%;
+      overflow: hidden;
+      border-radius: var(--radius-lg);
+    }
+
+    /* Fade edges */
+    .fisheye-scroll-container::before,
+    .fisheye-scroll-container::after {
+      content: '';
+      position: absolute; top: 0; bottom: 0;
+      width: 80px; z-index: 10; pointer-events: none;
+    }
+    .fisheye-scroll-container::before {
+      left: 0;
+      background: linear-gradient(to right, rgba(249,241,235,0.9), transparent);
+    }
+    .fisheye-scroll-container::after {
+      right: 0;
+      background: linear-gradient(to left, rgba(249,241,235,0.9), transparent);
+    }
+
+    .fisheye-track {
+      display: flex;
+      gap: 16px;
+      padding: 12px 0 16px;
+      width: max-content;
+      animation: scrollLeft 55s linear infinite;
+    }
+    .fisheye-track:hover { animation-play-state: paused; }
+
+    /* FISHEYE CARD */
+    .fisheye-card {
+      position: relative;
+      flex-shrink: 0;
+      width: 200px;
+      aspect-ratio: 9/16;
+      border-radius: 24px;
+      overflow: hidden;
+      cursor: pointer;
+      transform-origin: center center;
+      transition: transform 0.5s cubic-bezier(0.34, 1.4, 0.64, 1), box-shadow 0.4s ease;
+      box-shadow: 0 4px 20px rgba(62,47,42,0.12);
+    }
+
+    .fisheye-card video {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      display: block;
+      border-radius: inherit;
+      transform: scale(1.0);
+      transition: transform 0.5s ease;
+    }
+
+    /* FISHEYE EFFECT ON HOVER via SVG filter */
+    .fisheye-card::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(circle at 50% 45%, rgba(0,0,0,0) 45%, rgba(0,0,0,0.18) 100%);
+      z-index: 2; pointer-events: none;
+      border-radius: inherit;
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+
+    .fisheye-card:hover {
+      transform: scale(1.06) perspective(400px) rotateX(2deg);
+      box-shadow: 0 20px 50px rgba(62,47,42,0.22);
+    }
+    .fisheye-card:hover::before { opacity: 1; }
+    .fisheye-card:hover video { transform: scale(1.05); }
+
+    /* Fisheye label */
+    .fisheye-label {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      padding: 20px 12px 12px;
+      background: linear-gradient(to top, rgba(30,23,20,0.7), transparent);
+      z-index: 3;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      transform: translateY(4px);
+    }
+    .fisheye-card:hover .fisheye-label { opacity: 1; transform: translateY(0); }
+    .fisheye-label span {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 10px; letter-spacing: 2px; text-transform: uppercase;
+      color: rgba(255,255,255,0.8);
+    }
+
+    /* Sound button on fisheye */
+    .fisheye-card .sound-btn { bottom: 10px; right: 10px; width: 34px; height: 34px; font-size: 14px; }
+    .fisheye-card:hover .sound-btn { opacity: 1; }
+
+    /* AI panel speed variant */
+    .fisheye-track.fast {
+      animation-duration: 45s;
+    }
+
+    /* === ACCENT PILL (section decorators) === */
+    .accent-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: linear-gradient(135deg, rgba(232,196,184,0.4), rgba(242,221,213,0.6));
+      border: 1px solid rgba(232,196,184,0.5);
+      border-radius: 999px;
+      padding: 5px 16px 5px 8px;
+      font-size: 10px; letter-spacing: 3px; text-transform: uppercase;
+      color: var(--bark); font-family: 'DM Sans', sans-serif;
+      margin-bottom: 14px;
+      backdrop-filter: blur(6px);
+    }
+    .accent-pill-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--dusty);
+    }
+
+    /* === FOOTER RULE === */
+    .section-divider {
+      width: 90%; height: 1px; margin: 10px auto;
+      background: linear-gradient(to right, transparent, rgba(201,167,155,0.35), transparent);
+    }
+
+    /* === PANEL 4 / 5 SPLIT ROW === */
+    .panel-4, .panel-5 { width: 50%; min-height: 400px; }
+
+    /* GRID SLIDE (Panel 4 video grid) */
+    .grid-slide {
+      min-width: 100%;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 15px;
+      padding: 30px 10px;
+    }
+    .panel-4 .grid-3 {
+      display: flex; flex-wrap: wrap; justify-content: center;
+      gap: 15px; width: 100%;
+    }
+    .panel-4 .video-box-wrapper {
+      flex: 1 1 150px; max-width: 180px; gap: 10px;
+    }
+    .panel-4 .video-box { height: auto; aspect-ratio: 9/16; max-width: 100%; }
+    .panel-4 .video-description { display: none; }
+
+    /* Panel 4 specific overrides */
+    .panel-4 .watermark-logo {
+      height: 50px !important; top: 30px !important;
+      bottom: auto !important;
+      transform: scale(0.9) rotate(10deg) !important;
+    }
+    .panel-4 .inner-liquid-card:hover .watermark-logo {
+      top: 30px !important; transform: scale(1) rotate(0deg) !important;
+    }
+    .panel-4 .inner-liquid-card:hover .watermark-logo.wm-side-2 { transform: scale(1.1) rotate(0deg) !important; }
+    .panel-4 .inner-liquid-card:hover .watermark-logo.wm-side-3 { transform: scale(0.9) rotate(0deg) !important; }
+
+    #panel4-slider-box {
+      overflow: hidden; background: none !important;
+      -webkit-mask-image: none !important; mask-image: none !important;
+      margin-top: -30px; margin-bottom: -30px;
+    }
+    #panel5-slider-box {
+      overflow: hidden; border-radius: 20px;
+      -webkit-mask-image: -webkit-radial-gradient(white, black);
+      mask-image: radial-gradient(white, black);
+      background: transparent; padding: 0;
+      width: calc(100% - 20px); margin: 0 auto;
+    }
+    #panel5-slider-box .internal-slider-viewport { overflow: hidden; border-radius: inherit; padding: 0; }
+
+    .slider-viewport { position: relative; width: 100%; }
+    #panel4-main-wrapper { padding-bottom: 30px; flex-grow: 1; }
+    #panel4-main-wrapper .slider-dots { bottom: 10px; margin-top: 0; }
+    #panel5-main-wrapper { padding-bottom: 30px; flex-grow: 1; }
+    #panel5-main-wrapper .slider-dots { bottom: 10px; margin-top: 0; }
+
+    /* Show dots on panel4/5 hover */
+    #panel4-main-wrapper:hover .slider-dots,
+    #panel5-main-wrapper:hover .slider-dots { opacity: 1; pointer-events: auto; }
+
+    /* Text group toggling for panel4/5 */
+    #panel5-controller .text-group { display: none; width: 100%; }
+    #panel5-controller .text-group.active { display: block; animation: fadeInText 0.5s ease; }
+    #panel4-text-wrapper .text-group { display: none; width: 100%; }
+    #panel4-text-wrapper .text-group.active { display: block; animation: fadeInText 0.5s ease; }
+
+    /* === MOBILE === */
+    @media(max-width:900px){
+      .independent-panels-row { flex-direction:column; }
+      .panel-1, .panel-2, .panel-4, .panel-5 { width:100%; min-height:auto; }
+      .contact-panel { gap:15px; padding:25px 28px; border-radius:40px; height:auto; }
+      .top-row-content { flex-direction:column; align-items:center; gap:18px; }
+      .header-right { text-align:center; padding-top:0; }
+      .header-left { text-align:center; align-items:center; padding-left:0; max-width:100%; }
+      .header-description { text-align:center; }
+      .panel-split-container { flex-direction:column; text-align:center; }
+      .grid-2, .grid-3 { display:flex; flex-direction:column; }
+      .reels-grid { grid-template-columns:repeat(2,1fr); }
+      .panel { padding:26px; width:92%; margin:18px auto; height:auto; }
+      .panel-text-side { align-items:center; margin-bottom:28px; }
+      .video-box.portrait { max-width:none; }
+      .video-description { max-width:none; }
+      .panel h2 { justify-content:center; gap:10px; }
+      .inner-liquid-card { padding:18px; }
+      .software-icons { justify-content:center; margin-top:18px; }
+      .software-icons img { width:62px; }
+      .video-box { height:auto; aspect-ratio:16/9; }
+      .dynamic-media-wrapper.viewed .video-box { width:40%; }
+      .dynamic-media-wrapper.viewed .end-card-text { width:60%; }
+      .text-static-width { width:auto; flex-shrink:1; margin-top:0; padding-right:0; }
+      .watermark-logo { height:60%; right:10px; }
+      .inner-liquid-card:hover .watermark-logo { right:18px; }
+      .social-float { width:38px; }
+      .glass-panel:hover .sf-yt { left:10px; }
+      .glass-panel:hover .sf-insta { left:50%; }
+      .glass-panel:hover .sf-x { left:20%; bottom:20px; }
+      .bg-graph { display:none; }
+      .niche-divider h2 { font-size:40px; margin-top:18px; }
+      .fisheye-card { width:160px; }
+      .fisheye-panel { padding: 24px 20px 20px; }
+      .fisheye-header { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Ambient blobs -->
+<div class="ambient ambient-1"></div>
+<div class="ambient ambient-2"></div>
+<div class="ambient ambient-3"></div>
+
+<!-- Giant background icons -->
+<img src="insta.png" class="bg-icon-giant bg-insta-giant" alt="">
+<img src="yt.png"    class="bg-icon-giant bg-yt-giant" alt="">
+
+<!-- ═══════════════════════════ HEADER ═══════════════════════════ -->
+<div class="contact-panel-container">
+  <header class="glass-panel contact-panel header-color">
+    <div class="glass-bg-layer"></div>
+    <div class="top-row-content">
+      <div class="header-left">
+        <div>
+          <h1>Abhiram</h1>
+          <span class="skills-apps">Premiere Pro &nbsp;·&nbsp; After Effects</span>
+        </div>
+        <div class="header-description">
+          Experienced in video editing with a strong foundation in visual storytelling. Proficient in Adobe Premiere Pro and After Effects for high-impact content creation.
+        </div>
+      </div>
+      <div class="header-right">
+        <div>
+          <a href="/cdn-cgi/l/email-protection#f79d969a9a8296959f9e85969ab7909a969e9bd994989a"><span class="__cf_email__" data-cfemail="b8d2d9d5d5cdd9dad0d1cad9d5f8dfd5d9d1d496dbd7d5">[email&#160;protected]</span></a>
+          <span>Video Editor &nbsp;·&nbsp; Visual Storyteller</span>
+        </div>
+        <div class="software-icons">
+          <img src="pr.png" alt="Premiere Pro">
+          <img src="ae.png" alt="After Effects">
+        </div>
+      </div>
+    </div>
+  </header>
+</div>
+
+<!-- ═══════════════════════ NICHE DIVIDER ═══════════════════════ -->
+<div class="niche-divider">
+  <h2>Crafting Cinematic Narratives, Tailored to Your Niche</h2>
+</div>
+
+<!-- ══════════════════════ PANEL ROW: AE + TALKING HEAD ════════════════════ -->
+<div class="independent-panels-row">
+
+  <!-- PANEL 1: AFTER EFFECTS -->
+  <div class="glass-panel panel panel-1 panel-1-color" id="panel-1">
+    <div class="glass-bg-layer"></div>
+    <div class="col-content">
+      <div class="inner-liquid-card">
+        <img src="ae.png" class="watermark-logo" alt="">
+        <h2>After Effects</h2>
+        <p>Emotion-driven lyrical storytelling, crafted with smooth cinematic transitions, rhythm-based cuts and visual flow that enhances the feel of the music.</p>
+      </div>
+
+      <div class="slider-viewport" id="panel1-main-wrapper">
+        <div class="dynamic-media-wrapper" id="panel1-controller">
+          <div class="video-box no-pop" id="panel1-slider-box">
+            <div class="internal-slider-viewport">
+              <div class="internal-slider-track">
+                <div class="slide-wrapper"><video muted playsinline preload="metadata"><source src="video1.mp4" type="video/mp4"></video></div>
+                <div class="slide-wrapper"><video muted playsinline preload="metadata"><source src="video15.mp4" type="video/mp4"></video></div>
+              </div>
+            </div>
+            <button class="sound-btn">🔇</button>
+          </div>
+          <div class="end-card-text">
+            <div class="divider-line"></div>
+            <img src="graph.png" class="bg-graph" alt="">
+            <div class="text-static-width">
+              <div class="text-group active" data-id="0">
+                <h3>3D Cinematic Depth</h3>
+                <p>I use 3D camera movement to give the lyrics real depth. A cinematic style that makes words feel like part of the world, not just text on a screen.</p>
+              </div>
+              <div class="text-group" data-id="1">
+                <h3>Visual Effects</h3>
+                <p>Advanced composition and effects that elevate storytelling, blending real footage with generated elements for a seamless experience.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="slider-dots">
+          <div class="dot active" data-index="0"></div>
+          <div class="dot" data-index="1"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PANEL 2: TALKING HEAD -->
+  <div class="glass-panel panel panel-2 panel-1-color" id="panel-2">
+    <div class="glass-bg-layer"></div>
+    <div class="col-content">
+      <div class="inner-liquid-card">
+        <img src="pr.png" class="watermark-logo" alt="">
+        <h2>Talking Head &amp; Info</h2>
+        <p>Clean, engaging edits for informational content. B-roll, dynamic pacing, and visual aids to retain audience attention while keeping the message clear.</p>
+      </div>
+
+      <div class="slider-viewport" id="panel2-main-wrapper">
+        <div class="dynamic-media-wrapper" id="panel2-controller">
+          <div class="video-box no-pop" id="video-slider-box">
+            <div class="internal-slider-viewport">
+              <div class="internal-slider-track">
+                <div class="slide-wrapper">
+                  <video id="video-7" class="scale-up-103" muted playsinline preload="metadata"><source src="video7.mp4#t=5.75" type="video/mp4"></video>
+                  <span class="ignore-audio" style="display:block;">* ignore audio</span>
+                </div>
+                <div class="slide-wrapper"><video muted playsinline preload="metadata"><source src="video8.mp4" type="video/mp4"></video></div>
+              </div>
+            </div>
+            <button class="sound-btn">🔇</button>
+          </div>
+          <div class="end-card-text">
+            <div class="divider-line"></div>
+            <img src="graph.png" class="bg-graph" alt="">
+            <div class="text-static-width">
+              <div class="text-group active" data-id="0">
+                <h3>Engaging Visuals</h3>
+                <p>Precise cuts and relevant B-roll to maintain high energy — information delivered effectively without losing the viewer's interest.</p>
+              </div>
+              <div class="text-group" data-id="1">
+                <h3>Simple &amp; Connected</h3>
+                <p>Edits that keep the viewer focused on the speaker and story, making content easy to follow from start to finish.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="slider-dots">
+          <div class="dot active" data-index="0"></div>
+          <div class="dot" data-index="1"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══════════════════ NEW: EDUCATION & INFORMATION ══════════════════ -->
+<div class="section-divider"></div>
+
+<div class="fisheye-panel-wrapper">
+  <section class="glass-panel fisheye-panel panel-fish-edu">
+    <div class="glass-bg-layer"></div>
+
+    <div class="fisheye-header">
+      <div class="fisheye-header-left">
+        <div class="accent-pill"><span class="accent-pill-dot"></span>Scroll to explore</div>
+        <h2>Education &amp; Information</h2>
+        <p>Structured, clear visual content that informs, educates and drives curiosity — from explainer sequences to documentary-style narratives.</p>
+      </div>
+    </div>
+
+    <div class="fisheye-scroll-container">
+      <div class="fisheye-track" id="edu-track">
+        <!-- Block A -->
+        <div class="fisheye-card"><video muted playsinline loop preload="metadata"><source src="scroll1.mp4" type="video/mp4"></video><button class="sound-btn">🔇</button></div>
+        <div class="fisheye-card"><video muted playsinline loop preload="metadata"><source src="scroll2.mp4" type="video/mp4"></video><button class="sound-btn">🔇</button></div>
+        <div class="fisheye-card"><video muted playsinline loop preload="metadata"><source src="scroll3.mp4" type="video/mp4"></video><button class="sound-btn">🔇</button></div>
+        <div class="fisheye-card"><video muted playsinline loop preload="metadata"><source src="scroll4.mp4" type="video/mp4"></video><button class="sound-btn">🔇</button></div>
+        <div class="fisheye-card"><video muted playsinline loop preload="metadata"><source src="scroll5.mp4" type="video/mp4"></video><button class="sound-btn">🔇</button></div>
+        <div class="fisheye-card"><video muted playsinline loop preload="metadata"><source src="scroll6.mp4" type="video/mp4"></video><button class="sound-btn">🔇</button></div>
+        <div class="fisheye-card"><video muted playsinline loop preload="metadata"><source src="scroll7.mp4" type="video/mp4"></video><button class="sound-btn">🔇</button></div>
+        <div class="fisheye-card"><video muted playsinline loop preload="metadata"><source src="scroll8.mp4" type="video/mp4"></video><button class="sound-btn">🔇</button></div>
+        <div class="fisheye-card"><video muted playsinline loop preload="metadata"><source src="scroll9.mp4" type="video/mp4"></video><button class="sound-btn">🔇</button></div>
+        <div class="fisheye-card"><video muted playsinline loop preload="metadata"><source src="scroll10.mp4" type="video/mp4"></video><button class="sound-btn">🔇</button></div>
+        <!-- Block B (duplicate for seamless loop) -->
+        <div class="fisheye-card"><video muted playsinline loop preload="metadata"><source src="scroll1.mp4" type="video/mp4"></video><button class="sound-btn">🔇</button></div>
+        <div class="fisheye-card"><video muted playsinline loop preload="metadata"><source src="scroll2.mp4" type="video/mp4"></video><button class="sound-btn">🔇</button></div>
+        <div class="fisheye-card"><video muted playsinline loop preload="metadata"><source src="scroll3.mp4" type="video/mp4"></video><button class="sound-btn">🔇</button></div>
+        <div class="fisheye-card"><video muted playsinline loop preload="metadata"><source src="scroll4.mp4" type="video/mp4"></video><button class="sound-btn">🔇</button></div>
+        <div class="fisheye-card"><video muted playsinline loop preload="metadata"><source src="scroll5.mp4" type="video/mp4"></video><button class="sound-btn">🔇</button></div>
+        <div class="fisheye-card"><video muted playsinline loop preload="metadata"><source src="scroll6.mp4" type="video/mp4"></video><button class="sound-btn">🔇</button></div>
+        <div class="fisheye-card"><video muted playsinline loop preload="metadata"><source src="scroll7.mp4" type="video/mp4"></video><button class="sound-btn">🔇</button></div>
+        <div class="fisheye-card"><video muted playsinline loop preload="metadata"><source src="scroll8.mp4" type="video/mp4"></video><button class="sound-btn">🔇</button></div>
+        <div class="fisheye-card"><video muted playsinline loop preload="metadata"><source src="scroll9.mp4" type="video/mp4"></video><button class="sound-btn">🔇</button></div>
+        <div class="fisheye-card"><video muted playsinline loop preload="metadata"><source src="scroll10.mp4" type="video/mp4"></video><button class="sound-btn">🔇</button></div>
+      </div>
+    </div>
+
+  </section>
+</div>
+
+<!-- ══════════════════ NEW: ADVANCED AI USAGE ══════════════════ -->
+<div class="fisheye-panel-wrapper">
+  <section class="glass-panel fisheye-panel panel-fish-ai">
+    <div class="glass-bg-layer"></div>
+
+    <div class="fisheye-header">
+      <div class="fisheye-header-left">
+        <div class="accent-pill"><span class="accent-pill-dot"></span>Next-gen workflows</div>
+        <h2>Advanced AI Usage</h2>
+        <p>Leveraging cutting-edge AI tools to enhance color, upscale, generate assets and automate repetitive tasks — creating content that pushes the boundary of what's possible.</p>
+      </div>
+    </div>
+
+    <div class="fisheye-scroll-container">
+      <div class="fisheye-track fast" id="ai-track">
+        <!-- Block A -->
+        <div class="fisheye-card"><video muted playsinline loop preload="metadata"><source src="scroll11.mp4" type="video/mp4"></video><button class="sound-btn">🔇</button></div>
+        <div class="fisheye-card"><video muted playsinline loop preload="metadata"><source src="scroll12.mp4" type="video/mp4"></video><button class="sound-btn">🔇</button></div>
+        <div class="fisheye-card"><video muted playsinline loop preload="metadata"><source src="scroll13.mp4" type="video/mp4"></video><button class="sound-btn">🔇</button></div>
+        <div class="fisheye-card"><video muted playsinline loop preload="metadata"><source src="scroll14.mp4" type="video/mp4"></video><button class="sound-btn">🔇</button></div>
+        <div class="fisheye-card"><video muted playsinline loop preload="metadata"><source src="scroll15.mp4" type="video/mp4"></video><button class="sound-btn">🔇</button></div>
+        <div class="fisheye-card"><video muted playsinline loop preload="metadata"><source src="scroll16.mp4" type="video/mp4"></video><button class="sound-btn">🔇</button></div>
+        <div class="fisheye-card"><video muted playsinline loop preload="metadata"><source src="scroll17.mp4" type="video/mp4"></video><button class="sound-btn">🔇</button></div>
+        <div class="fisheye-card"><video muted playsinline loop preload="metadata"><source src="scroll18.mp4" type="video/mp4"></video><button class="sound-btn">🔇</button></div>
+        <div class="fisheye-card"><video muted playsinline loop preload="metadata"><source src="scroll19.mp4" type="video/mp4"></video><button class="sound-btn">🔇</button></div>
+        <div class="fisheye-card"><video muted playsinline loop preload="metadata"><source src="scroll20.mp4" type="video/mp4"></video><button class="sound-btn">🔇</button></div>
+        <!-- Block B (duplicate for seamless loop) -->
+        <div class="fisheye-card"><video muted playsinline loop preload="metadata"><source src="scroll11.mp4" type="video/mp4"></video><button class="sound-btn">🔇</button></div>
+        <div class="fisheye-card"><video muted playsinline loop preload="metadata"><source src="scroll12.mp4" type="video/mp4"></video><button class="sound-btn">🔇</button></div>
+        <div class="fisheye-card"><video muted playsinline loop preload="metadata"><source src="scroll13.mp4" type="video/mp4"></video><button class="sound-btn">🔇</button></div>
+        <div class="fisheye-card"><video muted playsinline loop preload="metadata"><source src="scroll14.mp4" type="video/mp4"></video><button class="sound-btn">🔇</button></div>
+        <div class="fisheye-card"><video muted playsinline loop preload="metadata"><source src="scroll15.mp4" type="video/mp4"></video><button class="sound-btn">🔇</button></div>
+        <div class="fisheye-card"><video muted playsinline loop preload="metadata"><source src="scroll16.mp4" type="video/mp4"></video><button class="sound-btn">🔇</button></div>
+        <div class="fisheye-card"><video muted playsinline loop preload="metadata"><source src="scroll17.mp4" type="video/mp4"></video><button class="sound-btn">🔇</button></div>
+        <div class="fisheye-card"><video muted playsinline loop preload="metadata"><source src="scroll18.mp4" type="video/mp4"></video><button class="sound-btn">🔇</button></div>
+        <div class="fisheye-card"><video muted playsinline loop preload="metadata"><source src="scroll19.mp4" type="video/mp4"></video><button class="sound-btn">🔇</button></div>
+        <div class="fisheye-card"><video muted playsinline loop preload="metadata"><source src="scroll20.mp4" type="video/mp4"></video><button class="sound-btn">🔇</button></div>
+      </div>
+    </div>
+
+  </section>
+</div>
+
+<div class="section-divider"></div>
+
+<!-- ══════════════════════ REELS & SHORTS ════════════════════════ -->
+<div class="panel-wrapper">
+  <section class="glass-panel panel panel-3 panel-3-color">
+    <div class="glass-bg-layer"></div>
+    <img src="yt.png"    class="social-float sf-yt"    alt="">
+    <img src="insta.png" class="social-float sf-insta" alt="">
+    <img src="x.png"     class="social-float sf-x"     alt="">
+
+    <div class="panel-split-container">
+      <div class="inner-liquid-card panel-text-side">
+        <div class="accent-pill"><span class="accent-pill-dot"></span>Short-form</div>
+        <h2>Reels and Shorts</h2>
+        <p>High-impact vertical content designed for social media growth, engagement and modern viewing habits.<br>Fast-paced editing with trending audio maximizes audience retention.<br>Dynamic captions and motion graphics convey messages quickly, even without sound.</p>
+      </div>
+
+      <div class="reels-grid">
+        <div class="video-box portrait"><video muted playsinline loop preload="metadata"><source src="video2.mp4#t=5" type="video/mp4"></video><button class="sound-btn">🔇</button></div>
+        <div class="video-box portrait"><video muted playsinline loop preload="metadata"><source src="video3.mp4#t=5" type="video/mp4"></video><button class="sound-btn">🔇</button></div>
+        <div class="video-box portrait"><video muted playsinline loop preload="metadata"><source src="video9.mp4" type="video/mp4"></video><button class="sound-btn">🔇</button></div>
+        <div class="video-box portrait"><video muted playsinline loop preload="metadata"><source src="video10.mp4" type="video/mp4"></video><button class="sound-btn">🔇</button></div>
+        <div class="video-box portrait"><video muted playsinline loop preload="metadata"><source src="video11.mp4" type="video/mp4"></video><button class="sound-btn">🔇</button></div>
+        <div class="video-box portrait"><video muted playsinline loop preload="metadata"><source src="video12.mp4" type="video/mp4"></video><button class="sound-btn">🔇</button></div>
+        <div class="video-box portrait"><video muted playsinline loop preload="metadata"><source src="video13.mp4" type="video/mp4"></video><button class="sound-btn">🔇</button></div>
+        <div class="video-box portrait"><video muted playsinline loop preload="metadata"><source src="video14.mp4" type="video/mp4"></video><button class="sound-btn">🔇</button></div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- SPLIT ROW: PANEL 4 & PANEL 5 -->
+<div class="independent-panels-row">
+
+    <!-- PANEL 4: SLIDER (AI + LIFESTYLE) -->
+    <div class="glass-panel panel panel-4 panel-4-color" id="panel-4">
+        <div class="glass-bg-layer"></div>
+        <div class="col-content">
+            <!-- PANEL 4 TEXT SLIDER -->
+            <div class="inner-liquid-card" id="panel4-text-wrapper">
+                <img src="yt.png" class="watermark-logo wm-side-1" alt="">
+                <img src="insta.png" class="watermark-logo wm-side-2" alt="">
+                <img src="x.png" class="watermark-logo wm-side-3" alt="">
+                <div class="text-group active" data-id="0">
+                    <h2>AI & Gen-AI</h2>
+                    <p>Creating surreal, futuristic, and imaginative visuals using the latest Artificial Intelligence tools for storytelling that pushes boundaries.</p>
+                </div>
+                <div class="text-group" data-id="1">
+                    <h2>Faceless & Lifestyle</h2>
+                    <p>Minimal, aesthetic and story-focused visuals crafted for brands, concepts and lifestyle storytelling without showing faces.</p>
+                </div>
+            </div>
+            <!-- PANEL 4 VIDEO GRID SLIDER -->
+            <div class="slider-viewport" id="panel4-main-wrapper">
+                <div class="video-box no-pop" id="panel4-slider-box" style="height:auto; aspect-ratio:auto; background:none;">
+                    <div class="internal-slider-viewport">
+                        <div class="internal-slider-track">
+                            <!-- SLIDE 1: AI VIDEOS -->
+                            <div class="grid-slide">
+                                <div class="video-box-wrapper">
+                                    <div class="video-box portrait">
+                                        <video class="auto-play-video" muted playsinline loop preload="metadata"><source src="ai1.mp4" type="video/mp4"></video>
+                                        <button class="sound-btn">🔇</button>
+                                    </div>
+                                </div>
+                                <div class="video-box-wrapper">
+                                    <div class="video-box portrait">
+                                        <video class="auto-play-video" muted playsinline loop preload="metadata"><source src="ai2.mp4" type="video/mp4"></video>
+                                        <button class="sound-btn">🔇</button>
+                                    </div>
+                                </div>
+                                <div class="video-box-wrapper">
+                                    <div class="video-box portrait">
+                                        <video class="auto-play-video" muted playsinline loop preload="metadata"><source src="ai3.mp4" type="video/mp4"></video>
+                                        <button class="sound-btn">🔇</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- SLIDE 2: LIFESTYLE VIDEOS -->
+                            <div class="grid-slide">
+                                <div class="video-box-wrapper">
+                                    <div class="video-box portrait">
+                                        <video class="auto-play-video" muted playsinline loop preload="metadata"><source src="video4.mp4" type="video/mp4"></video>
+                                        <button class="sound-btn">🔇</button>
+                                    </div>
+                                </div>
+                                <div class="video-box-wrapper">
+                                    <div class="video-box portrait">
+                                        <video class="auto-play-video" muted playsinline loop preload="metadata"><source src="video5.mp4#t=5" type="video/mp4"></video>
+                                        <button class="sound-btn">🔇</button>
+                                    </div>
+                                </div>
+                                <div class="video-box-wrapper">
+                                    <div class="video-box portrait">
+                                        <video class="auto-play-video" muted playsinline loop preload="metadata"><source src="video6.mp4" type="video/mp4"></video>
+                                        <button class="sound-btn">🔇</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="slider-dots">
+                    <div class="dot active" data-index="0"></div>
+                    <div class="dot" data-index="1"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PANEL 5: CELEBRATIONS & CINEMATIC AI -->
+    <div class="glass-panel panel panel-5 panel-4-color" id="panel-5">
+        <div class="glass-bg-layer"></div>
+        <div class="col-content">
+            <div class="inner-liquid-card">
+                <div>
+                    <h2>Celebrations & Cinematic AI</h2>
+                    <p>Capturing life's best moments and exploring the frontiers of AI generation to create stunning visual experiences.</p>
+                </div>
+            </div>
+            <div class="slider-viewport" id="panel5-main-wrapper">
+                <div class="dynamic-media-wrapper" id="panel5-controller">
+                    <div class="video-box no-pop" id="panel5-slider-box">
+                        <div class="internal-slider-viewport">
+                            <div class="internal-slider-track">
+                                <div class="slide-wrapper">
+                                    <video muted playsinline preload="metadata"><source src="video21.mp4" type="video/mp4"></video>
+                                </div>
+                                <div class="slide-wrapper">
+                                    <video muted playsinline preload="metadata"><source src="video22.mp4" type="video/mp4"></video>
+                                </div>
+                                <div class="slide-wrapper">
+                                    <video muted playsinline preload="metadata"><source src="video23.mp4" type="video/mp4"></video>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="sound-btn">🔇</button>
+                    </div>
+                    <div class="end-card-text">
+                        <div class="divider-line"></div>
+                        <img src="graph.png" class="bg-graph" alt="">
+                        <div class="text-static-width">
+                            <div class="text-group active" data-id="0">
+                                <h3>Celebration Highlights</h3>
+                                <p>Capturing the joy and energy of special moments with vibrant color grading and rhythmic editing.</p>
+                            </div>
+                            <div class="text-group" data-id="1">
+                                <h3>Wedding & Events</h3>
+                                <p>Cinematic storytelling for weddings and events, focusing on emotional beats and candid interactions.</p>
+                            </div>
+                            <div class="text-group" data-id="2">
+                                <h3>AI Cinematics</h3>
+                                <p>Pushing boundaries with AI-generated visuals, creating surreal landscapes and futuristic concepts.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="slider-dots">
+                    <div class="dot active" data-index="0"></div>
+                    <div class="dot" data-index="1"></div>
+                    <div class="dot" data-index="2"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- ══════════════════════════ JS ══════════════════════════════ -->
+<script>
+  // --- STATE ---
+  let isPanel1VideoHovered = false;
+  let isPanel2VideoHovered = false;
+  let isPanel5VideoHovered = false;
+  const sliderStates = {
+    'panel1-slider-box': { currentSlide: 0, isSliding: false },
+    'video-slider-box':  { currentSlide: 0, isSliding: false },
+    'panel5-slider-box': { currentSlide: 0, isSliding: false },
+    'panel4-slider-box': { currentSlide: 0, isSliding: false }
+  };
+
+  // --- FISHEYE: play on hover, pause on leave ---
+  document.querySelectorAll('.fisheye-card').forEach(card => {
+    const video = card.querySelector('video');
+    const btn   = card.querySelector('.sound-btn');
+    let soundOn = false;
+
+    card.addEventListener('mouseenter', () => {
+      if(video) { video.muted = true; video.play().catch(()=>{}); }
+    });
+    card.addEventListener('mouseleave', () => {
+      if(video) { video.muted = true; }
+    });
+    if(btn) {
+      btn.addEventListener('click', e => {
+        e.stopPropagation();
+        soundOn = !soundOn;
+        if(video) video.muted = !soundOn;
+        btn.textContent = soundOn ? '🔊' : '🔇';
+      });
+    }
+  });
+
+  // --- AUTO-PLAY OBSERVER for Panel 4 ---
+  const autoPlayObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      const video = entry.target;
+      if(entry.isIntersecting && !video.dataset.hasStarted) {
+        video.muted = true;
+        video.currentTime = 0;
+        video.dataset.hasStarted = "true";
+        video.play().catch(()=>{});
+      }
+    });
+  }, { threshold: 0.5 });
+
+  document.querySelectorAll('.panel-4 video').forEach(v => autoPlayObserver.observe(v));
+
+  // --- BURST LOGIC ---
+  const panel1el = document.querySelector('#panel-1');
+  if(panel1el) {
+    panel1el.addEventListener('mouseenter', () => {
+      const sliderBox = document.getElementById('panel1-slider-box');
+      if(sliderBox) {
+        const track = sliderBox.querySelector('.internal-slider-track');
+        const idx   = sliderStates['panel1-slider-box'].currentSlide;
+        const vid   = track.children[idx].querySelector('video');
+        if(vid && !isPanel1VideoHovered) {
+          vid.muted = true;
+          vid.play().then(() => { setTimeout(() => { if(!isPanel1VideoHovered) vid.pause(); }, 150); }).catch(()=>{});
+        }
+      }
+    });
+  }
+  const panel2el = document.querySelector('#panel-2');
+  if(panel2el) {
+    panel2el.addEventListener('mouseenter', () => {
+      const sliderBox = document.getElementById('video-slider-box');
+      if(sliderBox) {
+        const track = sliderBox.querySelector('.internal-slider-track');
+        const idx   = sliderStates['video-slider-box'].currentSlide;
+        const vid   = track.children[idx].querySelector('video');
+        if(vid && !isPanel2VideoHovered) {
+          vid.muted = true;
+          vid.play().then(() => { setTimeout(() => { if(!isPanel2VideoHovered) vid.pause(); }, 150); }).catch(()=>{});
+        }
+      }
+    });
+  }
+  const panel5el = document.querySelector('#panel-5');
+  if(panel5el) {
+    panel5el.addEventListener('mouseenter', () => {
+      const sliderBox = document.getElementById('panel5-slider-box');
+      if(sliderBox) {
+        const track = sliderBox.querySelector('.internal-slider-track');
+        const idx   = sliderStates['panel5-slider-box'].currentSlide;
+        const vid   = track.children[idx].querySelector('video');
+        if(vid && !isPanel5VideoHovered) {
+          vid.muted = true;
+          vid.play().then(() => { setTimeout(() => { if(!isPanel5VideoHovered) vid.pause(); }, 150); }).catch(()=>{});
+        }
+      }
+    });
+  }
+
+  const safePlay = (video) => {
+    if(!video.dataset.hasStarted) {
+      video.currentTime = 0;
+      video.dataset.hasStarted = "true";
+    }
+    if(video.ended) video.currentTime = 0;
+    video.play().catch(()=>{});
+  };
+
+  // --- VIDEO BOX LOGIC ---
+  document.querySelectorAll('.video-box').forEach(box => {
+    if(box.id === 'panel4-slider-box') return;
+    const isInternalSlider = box.querySelector('.internal-slider-track');
+    const getActiveVideo = () => {
+      if(isInternalSlider) {
+        const boxId = box.id;
+        const state = sliderStates[boxId];
+        const track = box.querySelector('.internal-slider-track');
+        return track.children[state ? state.currentSlide : 0].querySelector('video');
+      }
+      return box.querySelector('video');
+    };
+    const video = getActiveVideo();
+    const button = box.querySelector('.sound-btn');
+    const isPanel4 = box.closest('.panel-4') !== null;
+    const dynamicWrapper = box.closest('.dynamic-media-wrapper');
+    const isPanel1 = box.closest('#panel-1') !== null;
+    const isPanel2 = box.closest('#panel-2') !== null;
+    const isPanel5 = box.closest('#panel-5') !== null;
+
+    if(video) video.muted = true;
+    if(button) button.textContent = "🔇";
+    let soundOn = false;
+
+    const closeCard = () => {
+      if(dynamicWrapper && dynamicWrapper.classList.contains('viewed')) {
+        dynamicWrapper.classList.remove('viewed');
+        soundOn = false;
+        if(button) button.textContent = "🔇";
+        const v = getActiveVideo();
+        v.muted = true;
+        safePlay(v);
+      }
+    };
+
+    if(button) {
+      button.addEventListener('click', e => {
+        e.stopPropagation();
+        const v = getActiveVideo();
+        soundOn = !soundOn;
+        v.muted = !soundOn;
+        button.textContent = soundOn ? "🔊" : "🔇";
+      });
+    }
+
+    box.addEventListener('mouseenter', () => {
+      const v = getActiveVideo();
+      if(isPanel1) isPanel1VideoHovered = true;
+      if(isPanel2) isPanel2VideoHovered = true;
+      if(isPanel5) isPanel5VideoHovered = true;
+      safePlay(v);
+      if(soundOn) v.muted = false;
+    });
+
+    box.addEventListener('mouseleave', () => {
+      const v = getActiveVideo();
+      if(isPanel1) isPanel1VideoHovered = false;
+      if(isPanel2) isPanel2VideoHovered = false;
+      if(isPanel5) isPanel5VideoHovered = false;
+      v.muted = true;
+      if(dynamicWrapper) {
+        if(!soundOn) v.pause();
+      } else if(isPanel4) { /* keep looping */ }
+      else { if(!soundOn) v.pause(); }
+    });
+
+    let clickTimer = null;
+    box.addEventListener('click', e => {
+      const v = getActiveVideo();
+      if(dynamicWrapper) {}
+      if(e.detail === 1) {
+        clickTimer = setTimeout(() => {
+          soundOn = !soundOn;
+          v.muted = !soundOn;
+          if(button) button.textContent = soundOn ? "🔊" : "🔇";
+        }, 250);
+      } else if(e.detail === 2) {
+        clearTimeout(clickTimer);
+        if(dynamicWrapper) {
+          if(dynamicWrapper.classList.contains('viewed')) closeCard();
+          else { dynamicWrapper.classList.add('viewed'); safePlay(v); }
+        }
+      }
+    });
+
+    box.addEventListener('force-compress', () => {
+      if(dynamicWrapper) {
+        dynamicWrapper.classList.add('viewed');
+        soundOn = false;
+        if(button) button.textContent = "🔇";
+      }
+    });
+  });
+
+  // --- SLIDER LOGIC ---
+  const sliderBoxes = [
+    document.getElementById('panel1-slider-box'),
+    document.getElementById('video-slider-box'),
+    document.getElementById('panel5-slider-box'),
+    document.getElementById('panel4-slider-box')
+  ];
+  sliderBoxes.forEach(sliderBox => {
+    if(!sliderBox) return;
+    const boxId = sliderBox.id;
+    const internalTrack = sliderBox.querySelector('.internal-slider-track');
+    const dots = sliderBox.closest('.slider-viewport').querySelectorAll('.dot');
+
+    if(internalTrack && boxId !== 'panel4-slider-box') {
+      const sliderVideos = internalTrack.querySelectorAll('video');
+      const totalSlides = internalTrack.children.length;
+      sliderVideos.forEach((v, index) => {
+        v.addEventListener('ended', () => {
+          v.pause();
+          if(index === totalSlides - 1) {
+            sliderBox.dispatchEvent(new CustomEvent('force-compress'));
+            setTimeout(() => { updateSlider(boxId, 0); }, 500);
+          } else {
+            setTimeout(() => { updateSlider(boxId, index + 1); }, 300);
+          }
+        });
+      });
+    }
+
+    dots.forEach(dot => {
+      dot.addEventListener('click', () => {
+        updateSlider(boxId, parseInt(dot.getAttribute('data-index')));
+      });
+    });
+
+    let touchStartX = 0, touchEndX = 0;
+    const handleSwipe = () => {
+      const current = sliderStates[boxId].currentSlide;
+      const totalSlides = internalTrack.children.length;
+      if(touchEndX < touchStartX - 30) { if(current < totalSlides - 1) updateSlider(boxId, current + 1); }
+      if(touchEndX > touchStartX + 30) { if(current > 0) updateSlider(boxId, current - 1); }
+    };
+    sliderBox.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; });
+    sliderBox.addEventListener('touchend',   e => { touchEndX = e.changedTouches[0].screenX; handleSwipe(); });
+    sliderBox.addEventListener('mousedown',  e => { touchStartX = e.screenX; });
+    sliderBox.addEventListener('mouseup',    e => { touchEndX = e.screenX; handleSwipe(); });
+    sliderBox.addEventListener('wheel', e => {
+      if(Math.abs(e.deltaX) > 10) {
+        e.preventDefault();
+        const state = sliderStates[boxId];
+        const totalSlides = internalTrack.children.length;
+        if(!state.isSliding) {
+          if(e.deltaX > 0) { if(state.currentSlide < totalSlides - 1) updateSlider(boxId, state.currentSlide + 1); }
+          else             { if(state.currentSlide > 0) updateSlider(boxId, state.currentSlide - 1); }
+        }
+      }
+    }, { passive: false });
+  });
+
+  function updateSlider(boxId, index) {
+    const state = sliderStates[boxId];
+    if(state.isSliding) return;
+    state.isSliding = true;
+
+    const sliderBox = document.getElementById(boxId);
+    const internalTrack = sliderBox.querySelector('.internal-slider-track');
+    const dots = sliderBox.closest('.slider-viewport').querySelectorAll('.dot');
+
+    let textWrapper;
+    if(boxId === 'panel4-slider-box') {
+      textWrapper = document.getElementById('panel4-text-wrapper');
+    } else {
+      textWrapper = sliderBox.closest('.dynamic-media-wrapper').querySelector('.text-static-width');
+    }
+    const textGroups = textWrapper ? textWrapper.querySelectorAll('.text-group') : [];
+
+    internalTrack.querySelectorAll('video').forEach(v => { v.pause(); v.muted = true; });
+    state.currentSlide = index;
+    internalTrack.style.transform = `translateX(-${state.currentSlide * 100}%)`;
+    dots.forEach(d => d.classList.remove('active'));
+    if(dots[state.currentSlide]) dots[state.currentSlide].classList.add('active');
+    textGroups.forEach(t => t.classList.remove('active'));
+
+    setTimeout(() => {
+      if(textWrapper) {
+        const activeText = textWrapper.querySelector(`.text-group[data-id="${state.currentSlide}"]`);
+        if(activeText) activeText.classList.add('active');
+      }
+      state.isSliding = false;
+      if(sliderBox.matches(':hover') || boxId === 'panel4-slider-box') {
+        const activeSlide = internalTrack.children[index];
+        const videosToPlay = activeSlide.querySelectorAll('video');
+        videosToPlay.forEach(newVideo => {
+          if(newVideo.ended) newVideo.currentTime = 0;
+          newVideo.play().catch(()=>{});
+          newVideo.muted = true;
+        });
+      }
+    }, 300);
+  }
+</script>
+
+</body>
+</html>

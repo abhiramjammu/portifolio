@@ -1,0 +1,10 @@
+clean_repo/
+clean_upload/
+clean_upload2/
+fast_repo/
+lfs_repo/
+shallow_repo/
+temp_repo/
+treeless_repo/
+.gitattributes
+Abhiram_chk/

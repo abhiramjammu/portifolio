@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Abhiram | Award-Winning Portfolio</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav>
+    <div class="nav-brand">&lt;JS<span class="text-gradient">A</span>/&gt;</div>
+    <a href="#" class="btn-primary" style="padding: 10px 24px; font-size: 0.9rem;">Explore Work</a>
+  </nav>
+
+  <!-- 3D HERO SECTION WITH FLOATING PILLS -->
+  <!-- Note: We use .hero-scroll-container for JS targeting, and .hero-section for layout -->
+  <section class="hero-section hero-scroll-container">
+    <!-- Seamless Gradient Background for Hero -->
+    <div class="hero-gradient-bg"></div>
+    
+    <!-- Interactive Universe Particle Canvas -->
+    <canvas id="particle-canvas" class="particle-bg"></canvas>
+
+    <!-- Text Content -->
+    <div class="hero-content reveal-up" style="position: relative;">
+      
+      <div class="dark-pill" style="margin-bottom: 2rem;">
+        <div class="glow-dot dot-green"></div>
+        Available for opportunities
+      </div>
+      
+      <h1>Jaya Sai<br><span class="text-gradient" style="font-size: 1.1em; line-height: 1;">Abhiram</span></h1>
+      <h3 style="color: #4facfe; font-weight: 500; margin-bottom: 2rem;">Creative Editor |</h3>
+      
+      <p style="max-width: 80%; font-size: 1.2rem; margin-bottom: 3rem;">
+        Architecting digital experiences at the intersection of Motion Graphics, Data, and GenAI.
+      </p>
+      
+      <div style="display: flex; align-items: center; gap: 2rem;">
+        <a href="#" class="btn-primary">Explore Work</a>
+        <div style="display: flex; flex-direction: column; gap: 0.7rem; opacity: 0.85;">
+          <a href="https://mail.google.com/mail/u/0/?fs=1&to=jammuabhiram@gmail.com&tf=cm" target="_blank" class="hero-contact-link">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+            Gmail
+          </a>
+          <a href="https://www.linkedin.com/in/jayasaiabhiram/" target="_blank" class="hero-contact-link">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
+            LinkedIn
+          </a>
+        </div>
+      </div>
+    </div>
+    
+    <div class="hero-canvas-wrapper reveal-up" style="transition-delay: 0.3s; position: relative; display: flex; align-items: center; justify-content: center; transform: translateX(50px);">
+      <!-- Creative Tech Rings behind the canvas -->
+      <div class="creative-ring cr-1 orbs-active">
+        <!-- Revolving Glowy Balls perfectly aligned to the dashed orbit -->
+        <div class="glowy-ball-wrapper gb-w-1">
+          <div class="glowy-ball gb-1">
+            <div class="logo-container lc-1" title="ChatGPT">
+              <img src="https://api.iconify.design/simple-icons/openai.svg?color=black" width="36" height="36" alt="OpenAI" />
+            </div>
+          </div>
+        </div>
+        <div class="glowy-ball-wrapper gb-w-2">
+          <div class="glowy-ball gb-2">
+            <div class="logo-container lc-2" title="Midjourney">
+              <img src="https://api.iconify.design/bxl/midjourney.svg?color=black" width="36" height="36" alt="Midjourney" />
+            </div>
+          </div>
+        </div>
+        <div class="glowy-ball-wrapper gb-w-3">
+          <div class="glowy-ball gb-3">
+            <div class="logo-container lc-3" title="Claude">
+              <img src="https://api.iconify.design/simple-icons/anthropic.svg?color=black" width="36" height="36" alt="Anthropic Claude" />
+            </div>
+          </div>
+        </div>
+        <div class="glowy-ball-wrapper gb-w-4">
+          <div class="glowy-ball gb-4">
+            <div class="logo-container lc-4" title="GitHub Copilot">
+              <img src="https://api.iconify.design/simple-icons/githubcopilot.svg?color=black" width="36" height="36" alt="GitHub Copilot" />
+            </div>
+          </div>
+        </div>
+        <div class="glowy-ball-wrapper gb-w-5">
+          <div class="glowy-ball gb-5">
+            <div class="logo-container lc-5" title="Google Gemini">
+              <img src="https://api.iconify.design/simple-icons/googlegemini.svg?color=black" width="36" height="36" alt="Google Gemini" />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="creative-ring cr-2"></div>
+      
+      <!-- The Floating 3D Robot -->
+      <img id="hero-robot" src="assets/3d_robot_blue_nobg.png" alt="3D Robot" class="floating-robot" style="transition: filter 0.5s;">
+      
+      <!-- Cooldown Text -->
+      <div id="cooldown-text" class="cooldown-hud">
+        COOLDOWN: 03S
+      </div>
+    </div>
+  </section>
+
+  <!-- ADVANCED AI USAGE (Horizontal Scroll) -->
+  <section class="section-wrapper reveal-up" style="padding-bottom: 20px;">
+    <div class="glass-panel">
+      <div class="dark-pill" style="margin-bottom: 1.5rem;">
+        <div class="glow-dot dot-blue"></div>
+        Experienced in
+      </div>
+      <h2>Advanced <span class="text-gradient">AI Usage</span></h2>
+      <p>Leveraging cutting-edge AI tools to enhance color, upscale and generate assets — pushing the boundary of what's visually possible.</p>
+    </div>
+  </section>
+  <div class="horizontal-scroll-section reveal-up">
+    <div class="scroll-card"><video data-src="assets/scroll11.mp4" class="hover-play" muted playsinline loop></video><button class="volume-btn">🔇</button></div>
+    <div class="scroll-card"><video data-src="assets/scroll12.mp4" class="hover-play" muted playsinline loop></video><button class="volume-btn">🔇</button></div>
+    <div class="scroll-card"><video data-src="assets/scroll13.mp4" class="hover-play" muted playsinline loop></video><button class="volume-btn">🔇</button></div>
+    <div class="scroll-card"><video data-src="assets/scroll14.mp4" class="hover-play" muted playsinline loop></video><button class="volume-btn">🔇</button></div>
+    <div class="scroll-card"><video data-src="assets/scroll15.mp4" class="hover-play" muted playsinline loop></video><button class="volume-btn">🔇</button></div>
+    <div class="scroll-card"><video data-src="assets/scroll16.mp4" class="hover-play" muted playsinline loop></video><button class="volume-btn">🔇</button></div>
+    <div class="scroll-card"><video data-src="assets/scroll17.mp4" class="hover-play" muted playsinline loop></video><button class="volume-btn">🔇</button></div>
+    <div class="scroll-card"><video data-src="assets/scroll18.mp4" class="hover-play" muted playsinline loop></video><button class="volume-btn">🔇</button></div>
+    <div class="scroll-card"><video data-src="assets/scroll19.mp4" class="hover-play" muted playsinline loop></video><button class="volume-btn">🔇</button></div>
+    <div class="scroll-card"><video data-src="assets/scroll20.mp4" class="hover-play" muted playsinline loop></video><button class="volume-btn">🔇</button></div>
+  </div>
+
+
+
+  <!-- SPLIT ROW: AE + TALKING HEAD -->
+  <section class="section-wrapper reveal-up">
+    <div class="split-row">
+      <!-- AE -->
+      <div class="glass-panel col-layout" style="justify-content: flex-start;">
+        <div>
+          <h2 style="font-size: 2.2rem;">After Effects</h2>
+          <p>Emotion-driven lyrical storytelling with smooth cinematic transitions, rhythm-based cuts and visual flow that enhances the feel of the music.</p>
+        </div>
+        <div class="mini-carousel" style="margin-top: auto;">
+          <div class="video-container landscape no-scale"><video data-src="assets/video1.mp4" muted playsinline loop></video><button class="volume-btn">🔇</button></div>
+          <div class="video-container landscape no-scale"><video data-src="assets/video15.mp4" muted playsinline loop></video><button class="volume-btn">🔇</button></div>
+        </div>
+      </div>
+      <!-- Talking Head -->
+      <div class="glass-panel col-layout" style="justify-content: flex-start;">
+        <div>
+          <h2 style="font-size: 2.2rem;">Talking Head</h2>
+          <p>Clean, engaging edits for informational content — B-roll, dynamic pacing and visual aids to retain audience attention while keeping the message clear.</p>
+        </div>
+        <div class="mini-carousel" style="margin-top: auto;">
+          <div class="video-container landscape no-scale"><video data-src="assets/video7.mp4" muted playsinline loop></video><button class="volume-btn">🔇</button></div>
+          <div class="video-container landscape no-scale"><video data-src="assets/video8.mp4" muted playsinline loop></video><button class="volume-btn">🔇</button></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- REELS & SHORTS -->
+  <section class="section-wrapper reveal-up">
+    <div class="glass-panel split-row" style="margin-bottom:0;">
+      <div class="col-layout">
+        <div>
+          <div class="dark-pill" style="margin-bottom: 1.5rem;">
+            <div class="glow-dot dot-red"></div>
+            Short-form
+          </div>
+          <h2>Reels and Shorts</h2>
+          <p>High-impact vertical content for social media growth — fast-paced editing, trending audio and dynamic captions that maximise retention even without sound.</p>
+          
+          <div class="social-icons" style="display: flex; gap: 24px; margin-top: 24px;">
+            <img src="assets/insta.png" alt="Instagram" style="width: 45px; height: 45px; object-fit: contain; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.15)); transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);" onmouseover="this.style.transform='scale(1.2) translateY(-5px)'" onmouseout="this.style.transform='scale(1) translateY(0)'">
+            <img src="assets/yt.png" alt="YouTube" style="width: 45px; height: 45px; object-fit: contain; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.15)); transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);" onmouseover="this.style.transform='scale(1.2) translateY(-5px)'" onmouseout="this.style.transform='scale(1) translateY(0)'">
+            <img src="assets/x.png" alt="X" style="width: 45px; height: 45px; object-fit: contain; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.15)); transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);" onmouseover="this.style.transform='scale(1.2) translateY(-5px)'" onmouseout="this.style.transform='scale(1) translateY(0)'">
+          </div>
+        </div>
+      </div>
+      <div class="video-grid grid-3">
+        <div class="video-container portrait"><video data-src="assets/video9.mp4" muted playsinline loop></video><button class="volume-btn">🔇</button></div>
+        <div class="video-container portrait"><video data-src="assets/video10.mp4" muted playsinline loop></video><button class="volume-btn">🔇</button></div>
+        <div class="video-container portrait"><video data-src="assets/video11.mp4" muted playsinline loop></video><button class="volume-btn">🔇</button></div>
+        <div class="video-container portrait"><video data-src="assets/video12.mp4" muted playsinline loop></video><button class="volume-btn">🔇</button></div>
+        <div class="video-container portrait"><video data-src="assets/video13.mp4" muted playsinline loop></video><button class="volume-btn">🔇</button></div>
+        <div class="video-container portrait"><video data-src="assets/video14.mp4" muted playsinline loop></video><button class="volume-btn">🔇</button></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EDUCATION -->
+  <section class="section-wrapper reveal-up" style="padding-bottom: 20px;">
+    <div class="glass-panel">
+      <div class="dark-pill" style="margin-bottom: 1.5rem;">
+        <div class="glow-dot dot-green"></div>
+        Scroll to explore
+      </div>
+      <h2>Education & <span class="text-gradient">Information</span></h2>
+      <p>Structured, clear visual content that informs, educates and drives curiosity — from explainer sequences to documentary-style narratives.</p>
+    </div>
+  </section>
+  <div class="horizontal-scroll-section reveal-up" id="edu-scroll">
+    <div class="scroll-card"><video data-src="assets/scroll1.mp4" class="hover-play" muted playsinline loop></video><button class="volume-btn">🔇</button></div>
+    <div class="scroll-card"><video data-src="assets/scroll2.mp4" class="hover-play" muted playsinline loop></video><button class="volume-btn">🔇</button></div>
+    <div class="scroll-card"><video data-src="assets/scroll3.mp4" class="hover-play" muted playsinline loop></video><button class="volume-btn">🔇</button></div>
+    <div class="scroll-card"><video data-src="assets/scroll4.mp4" class="hover-play" muted playsinline loop></video><button class="volume-btn">🔇</button></div>
+    <div class="scroll-card"><video data-src="assets/scroll5.mp4" class="hover-play" muted playsinline loop></video><button class="volume-btn">🔇</button></div>
+    <div class="scroll-card"><video data-src="assets/scroll6.mp4" class="hover-play" muted playsinline loop></video><button class="volume-btn">🔇</button></div>
+    <div class="scroll-card"><video data-src="assets/scroll7.mp4" class="hover-play" muted playsinline loop></video><button class="volume-btn">🔇</button></div>
+    <div class="scroll-card"><video data-src="assets/scroll8.mp4" class="hover-play" muted playsinline loop></video><button class="volume-btn">🔇</button></div>
+    <div class="scroll-card"><video data-src="assets/scroll9.mp4" class="hover-play" muted playsinline loop></video><button class="volume-btn">🔇</button></div>
+    <div class="scroll-card"><video data-src="assets/scroll10.mp4" class="hover-play" muted playsinline loop></video><button class="volume-btn">🔇</button></div>
+  </div>
+
+  <script src="js/main.js"></script>
+</body>
+</html>
