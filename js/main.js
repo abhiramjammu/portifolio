@@ -234,10 +234,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     }, { once: true });
                 }
                 
-                // Only autoplay if it's NOT a hover-play video
-                if (!video.classList.contains('hover-play')) {
-                    video.play().catch(e => console.log("Autoplay prevented", e));
-                }
+                // Remove autoplay entirely, let hover handle it
             } else {
                 if (!video.paused) {
                     video.pause();
@@ -252,18 +249,20 @@ document.addEventListener('DOMContentLoaded', () => {
     videos.forEach(video => {
         videoObserver.observe(video);
         
-        // Add hover logic for hover-play videos
-        if (video.classList.contains('hover-play')) {
-            const container = video.closest('.video-container');
-            if (container) {
-                container.addEventListener('mouseenter', () => {
-                    video.play().catch(e => console.log(e));
-                });
-                container.addEventListener('mouseleave', () => {
-                    video.pause();
-                    video.currentTime = 0; // Optional: reset to start
-                });
-            }
+        // Add global hover logic for ALL videos
+        const container = video.closest('.video-container') || video.parentElement;
+        if (container) {
+            container.addEventListener('mouseenter', () => {
+                if (!video.dataset.hasPlayed) {
+                    video.currentTime = 0;
+                    video.dataset.hasPlayed = "true";
+                }
+                video.play().catch(e => console.log(e));
+            });
+            container.addEventListener('mouseleave', () => {
+                video.pause();
+                // We do NOT reset currentTime, so it resumes where it left off
+            });
         }
     });
 
