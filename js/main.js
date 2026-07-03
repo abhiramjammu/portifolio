@@ -343,4 +343,82 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // --- DRAG-TO-SCROLL & AUTO-SCROLL LOGIC ---
+    const marquees = document.querySelectorAll('.marquee-container');
+    const allMiniCarousels = document.querySelectorAll('.mini-carousel');
+    const allScrollables = [...marquees, ...allMiniCarousels];
+
+    allScrollables.forEach(container => {
+        let isDown = false;
+        let startX;
+        let scrollLeft;
+        
+        // For auto-scroll
+        let animationId;
+        const isMarquee = container.classList.contains('marquee-container');
+        const scrollSpeed = 1; // Pixels per frame
+
+        const startAutoScroll = () => {
+            if (!isMarquee) return;
+            const scrollLoop = () => {
+                if (!isDown) {
+                    container.scrollLeft += scrollSpeed;
+                    // Reset if we've scrolled past half (the duplicated content)
+                    if (container.scrollLeft >= container.scrollWidth / 2 - 10) {
+                        container.scrollLeft = 0;
+                    }
+                }
+                animationId = requestAnimationFrame(scrollLoop);
+            };
+            animationId = requestAnimationFrame(scrollLoop);
+        };
+
+        const stopAutoScroll = () => {
+            if (animationId) cancelAnimationFrame(animationId);
+        };
+
+        container.addEventListener('mousedown', (e) => {
+            isDown = true;
+            container.classList.add('grabbing');
+            startX = e.pageX - container.offsetLeft;
+            scrollLeft = container.scrollLeft;
+            stopAutoScroll();
+        });
+
+        container.addEventListener('mouseleave', () => {
+            if (isDown) {
+                isDown = false;
+                container.classList.remove('grabbing');
+                startAutoScroll();
+            }
+        });
+
+        container.addEventListener('mouseup', () => {
+            isDown = false;
+            container.classList.remove('grabbing');
+            startAutoScroll();
+        });
+
+        container.addEventListener('mousemove', (e) => {
+            if (!isDown) return;
+            e.preventDefault();
+            const x = e.pageX - container.offsetLeft;
+            const walk = (x - startX) * 2; // Scroll-fast multiplier
+            container.scrollLeft = scrollLeft - walk;
+        });
+
+        // Initialize auto-scroll on load
+        if (isMarquee) {
+            startAutoScroll();
+            
+            // Pause on hover
+            container.addEventListener('mouseenter', () => {
+                if (!isDown) stopAutoScroll();
+            });
+            container.addEventListener('mouseleave', () => {
+                if (!isDown) startAutoScroll();
+            });
+        }
+    });
+
 });
