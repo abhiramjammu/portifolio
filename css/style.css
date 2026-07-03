@@ -613,6 +613,20 @@ video.loaded { opacity: 1; }
   transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+.focus-group-deep:hover .video-container {
+  opacity: 0.3;
+  filter: blur(2px) grayscale(40%);
+}
+.focus-group-deep .video-container:hover {
+  opacity: 1;
+  filter: blur(0) grayscale(0%);
+  transform: scale(1.05);
+  z-index: 20;
+}
+.focus-group-deep .video-container {
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
 /* 4. Bento Grid */
 .bento-grid {
   display: grid;
@@ -706,11 +720,7 @@ video.loaded { opacity: 1; }
   display: flex;
   align-items: center;
   gap: 40px;
-  margin-bottom: 40px;
-  background: rgba(20, 20, 20, 0.4);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  border-radius: 24px;
-  padding: 30px;
+  margin-bottom: 20px;
   overflow: hidden;
 }
 .category-text {
