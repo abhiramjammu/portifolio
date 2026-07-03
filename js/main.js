@@ -135,7 +135,19 @@ document.addEventListener('DOMContentLoaded', () => {
             particles.push(new Particle());
         }
         
+        let isHeroVisible = true;
+        const heroObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                isHeroVisible = entry.isIntersecting;
+            });
+        }, { threshold: 0 });
+        const heroSection = document.querySelector('.hero-section');
+        if (heroSection) heroObserver.observe(heroSection);
+        
         function animateParticles() {
+            requestAnimationFrame(animateParticles);
+            if (!isHeroVisible) return;
+
             ctx.clearRect(0, 0, width, height);
             
             // Calculate Orbit Center
@@ -168,7 +180,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 }
             }
-            requestAnimationFrame(animateParticles);
         }
         animateParticles();
     }
