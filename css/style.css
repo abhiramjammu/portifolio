@@ -613,7 +613,7 @@ video.loaded { opacity: 1; }
   transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.focus-group-deep:hover .video-container {
+.focus-group-deep .marquee-track:hover .video-container:not(:hover) {
   opacity: 0.3;
   filter: blur(2px) grayscale(40%);
 }
@@ -721,7 +721,6 @@ video.loaded { opacity: 1; }
   align-items: center;
   gap: 40px;
   margin-bottom: 20px;
-  overflow: hidden;
 }
 .category-text {
   flex: 0 0 25%;
@@ -739,15 +738,16 @@ video.loaded { opacity: 1; }
   display: flex;
   gap: 20px;
   width: max-content;
+  padding: 15px 0;
   animation: scroll-left 30s linear infinite;
 }
 .marquee-track:hover {
   animation-play-state: paused;
 }
 .marquee-track .video-container {
-  width: calc((100vw * 0.7 - 80px) / 4);
-  max-width: 250px;
-  min-width: 180px;
+  width: 150px;
+  max-width: 160px;
+  min-width: 140px;
   aspect-ratio: 9/16;
   flex-shrink: 0;
 }

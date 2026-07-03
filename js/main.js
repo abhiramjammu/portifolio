@@ -254,7 +254,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // Add hover logic for hover-play videos
         if (video.classList.contains('hover-play')) {
-            const container = video.closest('.scroll-card');
+            const container = video.closest('.video-container');
             if (container) {
                 container.addEventListener('mouseenter', () => {
                     video.play().catch(e => console.log(e));
