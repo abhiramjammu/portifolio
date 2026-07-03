@@ -356,16 +356,23 @@ document.addEventListener('DOMContentLoaded', () => {
         // For auto-scroll
         let animationId;
         const isMarquee = container.classList.contains('marquee-container');
-        const scrollSpeed = 1; // Pixels per frame
+        const isReverse = container.classList.contains('reverse-scroll');
+        const scrollSpeed = 0.4; // Reduced speed
 
         const startAutoScroll = () => {
             if (!isMarquee) return;
             const scrollLoop = () => {
                 if (!isDown) {
-                    container.scrollLeft += scrollSpeed;
-                    // Reset if we've scrolled past half (the duplicated content)
-                    if (container.scrollLeft >= container.scrollWidth / 2 - 10) {
-                        container.scrollLeft = 0;
+                    if (isReverse) {
+                        container.scrollLeft -= scrollSpeed;
+                        if (container.scrollLeft <= 0) {
+                            container.scrollLeft = container.scrollWidth / 2;
+                        }
+                    } else {
+                        container.scrollLeft += scrollSpeed;
+                        if (container.scrollLeft >= container.scrollWidth / 2 - 10) {
+                            container.scrollLeft = 0;
+                        }
                     }
                 }
                 animationId = requestAnimationFrame(scrollLoop);
@@ -403,7 +410,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!isDown) return;
             e.preventDefault();
             const x = e.pageX - container.offsetLeft;
-            const walk = (x - startX) * 2; // Scroll-fast multiplier
+            const walk = (x - startX); // Natural 1:1 scroll feel
             container.scrollLeft = scrollLeft - walk;
         });
 
