@@ -103,6 +103,14 @@
         COOLDOWN: 03S
       </div>
     </div>
+    
+    <!-- Scroll Indicator -->
+    <div class="scroll-indicator">
+      <div class="mouse">
+        <div class="wheel"></div>
+      </div>
+      <span>Explore</span>
+    </div>
   </section>
 
   <!-- MOTION GRAPHICS -->
@@ -119,8 +127,8 @@
         </div>
       </div>
       <div class="video-grid grid-2">
-        <div class="video-container portrait"><video data-src="assets/video10.mp4" muted playsinline loop></video><button class="volume-btn">🔇</button></div>
-        <div class="video-container portrait"><video data-src="assets/video3.mp4" muted playsinline loop></video><button class="volume-btn">🔇</button></div>
+        <div class="video-container portrait hover-glow"><video data-src="assets/video10.mp4" muted playsinline loop></video><button class="volume-btn">🔇</button></div>
+        <div class="video-container portrait hover-glow"><video data-src="assets/video3.mp4" muted playsinline loop></video><button class="volume-btn">🔇</button></div>
       </div>
     </div>
   </section>
@@ -136,7 +144,7 @@
       <p>Leveraging cutting-edge AI tools to enhance color, upscale and generate assets — pushing the boundary of what's visually possible.</p>
     </div>
   </section>
-  <div class="horizontal-scroll-section reveal-up">
+  <div class="horizontal-scroll-section reveal-up mask-edges focus-group">
     <div class="scroll-card"><video data-src="assets/scroll11.mp4" class="hover-play" muted playsinline loop></video><button class="volume-btn">🔇</button></div>
     <div class="scroll-card"><video data-src="assets/scroll12.mp4" class="hover-play" muted playsinline loop></video><button class="volume-btn">🔇</button></div>
     <div class="scroll-card"><video data-src="assets/scroll13.mp4" class="hover-play" muted playsinline loop></video><button class="volume-btn">🔇</button></div>
@@ -218,18 +226,22 @@
       <p>Structured, clear visual content that informs, educates and drives curiosity — from explainer sequences to documentary-style narratives.</p>
     </div>
   </section>
-  <div class="horizontal-scroll-section reveal-up" id="edu-scroll">
-    <div class="scroll-card"><video data-src="assets/scroll1.mp4" class="hover-play" muted playsinline loop></video><button class="volume-btn">🔇</button></div>
-    <div class="scroll-card"><video data-src="assets/scroll2.mp4" class="hover-play" muted playsinline loop></video><button class="volume-btn">🔇</button></div>
-    <div class="scroll-card"><video data-src="assets/scroll3.mp4" class="hover-play" muted playsinline loop></video><button class="volume-btn">🔇</button></div>
-    <div class="scroll-card"><video data-src="assets/scroll4.mp4" class="hover-play" muted playsinline loop></video><button class="volume-btn">🔇</button></div>
-    <div class="scroll-card"><video data-src="assets/scroll5.mp4" class="hover-play" muted playsinline loop></video><button class="volume-btn">🔇</button></div>
-    <div class="scroll-card"><video data-src="assets/scroll6.mp4" class="hover-play" muted playsinline loop></video><button class="volume-btn">🔇</button></div>
-    <div class="scroll-card"><video data-src="assets/scroll7.mp4" class="hover-play" muted playsinline loop></video><button class="volume-btn">🔇</button></div>
-    <div class="scroll-card"><video data-src="assets/scroll8.mp4" class="hover-play" muted playsinline loop></video><button class="volume-btn">🔇</button></div>
-    <div class="scroll-card"><video data-src="assets/scroll9.mp4" class="hover-play" muted playsinline loop></video><button class="volume-btn">🔇</button></div>
-    <div class="scroll-card"><video data-src="assets/scroll10.mp4" class="hover-play" muted playsinline loop></video><button class="volume-btn">🔇</button></div>
-  </div>
+  <section class="section-wrapper reveal-up" style="padding-bottom: 60px;">
+    <div class="bento-grid">
+      <div class="bento-large hover-glow">
+        <div class="video-container no-scale" style="aspect-ratio: auto;"><video data-src="assets/scroll1.mp4" muted playsinline loop></video><button class="volume-btn">🔇</button></div>
+      </div>
+      <div class="bento-small hover-glow">
+        <div class="video-container no-scale" style="aspect-ratio: auto;"><video data-src="assets/scroll2.mp4" muted playsinline loop></video><button class="volume-btn">🔇</button></div>
+      </div>
+      <div class="bento-small hover-glow">
+        <div class="video-container no-scale" style="aspect-ratio: auto;"><video data-src="assets/scroll3.mp4" muted playsinline loop></video><button class="volume-btn">🔇</button></div>
+      </div>
+      <div class="bento-wide hover-glow">
+        <div class="video-container no-scale" style="aspect-ratio: auto;"><video data-src="assets/scroll4.mp4" muted playsinline loop></video><button class="volume-btn">🔇</button></div>
+      </div>
+    </div>
+  </section>
 
   <script src="js/main.js"></script>
 </body>
