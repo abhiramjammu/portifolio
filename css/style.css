@@ -770,3 +770,34 @@ video.loaded { opacity: 1; }
   0% { transform: translateX(0); }
   100% { transform: translateX(calc(-50% - 10px)); }
 }
+
+/* --- DIVE DEEPER PANEL --- */
+.dive-deeper-btn {
+  background: var(--dark-glass-bg);
+  color: white;
+  border: 1px solid var(--dark-glass-border);
+  padding: 12px 24px;
+  border-radius: 30px;
+  cursor: pointer;
+  font-weight: 600;
+  margin-top: 15px;
+  transition: all 0.3s ease;
+  font-family: inherit;
+  font-size: 1rem;
+}
+.dive-deeper-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+  background: rgba(25,35,55,0.8);
+}
+.dive-deeper-panel {
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: max-height 0.8s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.5s ease;
+}
+.dive-deeper-panel.expanded {
+  max-height: 2500px;
+  opacity: 1;
+  margin-top: 30px;
+}

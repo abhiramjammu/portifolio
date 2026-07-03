@@ -329,6 +329,18 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-
+    // Dive Deeper Expandable Panel Logic
+    const diveBtn = document.getElementById('diveDeeperBtn');
+    const divePanel = document.getElementById('diveDeeperPanel');
+    if (diveBtn && divePanel) {
+        diveBtn.addEventListener('click', () => {
+            divePanel.classList.toggle('expanded');
+            if (divePanel.classList.contains('expanded')) {
+                diveBtn.innerHTML = 'Collapse &uarr;';
+            } else {
+                diveBtn.innerHTML = 'Dive Deeper &darr;';
+            }
+        });
+    }
 
 });
