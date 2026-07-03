@@ -345,6 +345,9 @@ nav.scrolled {
   gap: 40px;
   margin-bottom: 40px;
 }
+.split-row.wide-right {
+  grid-template-columns: 0.8fr 1.5fr;
+}
 
 .col-layout {
   display: flex;
