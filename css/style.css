@@ -770,9 +770,9 @@ video.loaded { opacity: 1; }
 
 
 /* --- DIVE DEEPER PANEL --- */
-.grid-2x2 {
+.grid-1x3 {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 30px;
   width: 100%;
   margin-top: 40px;
@@ -781,7 +781,7 @@ video.loaded { opacity: 1; }
 }
 
 @media (max-width: 900px) {
-  .grid-2x2 {
+  .grid-1x3 {
     grid-template-columns: 1fr;
     gap: 20px;
   }
